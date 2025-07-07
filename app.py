@@ -49,6 +49,16 @@ def connect_wifi():
 
     return jsonify(result)
 
+<<<<<<< HEAD
+=======
+@app.route("/get-wifi-result", methods=["GET"])
+def get_wifi_result():
+    try:
+        return send_file("resultWifi.json", mimetype='application/json')
+    except FileNotFoundError:
+        return jsonify({"resultCode": "-111", "message": "no result found"}), 404
+
+>>>>>>> f79493aec23558253ac27609c193e3e8453a71ab
 def list_directory(path):
     items = []
     for entry in os.scandir(path):
