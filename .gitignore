@@ -1,0 +1,63 @@
+# === Node.js ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log*
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pkl
+*.egg-info/
+.env
+.venv/
+venv/
+env/
+*.sqlite3
+
+# === Build / Dist Files ===
+dist/
+build/
+out/
+coverage/
+*.log
+*.tmp
+*.temp
+
+# === OS / Editor Files ===
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+
+# === VSCode ===
+.vscode/
+*.code-workspace
+
+# === Testing / Reports ===
+__pycache__/
+htmlcov/
+.jest/
+.nyc_output/
+coverage-final.json
+test-results.xml
+
+# === Misc ===
+*.bak
+*.old
+*.orig
+*.rej
+*.sublime-workspace
+*.sublime-project
+
+# === Local Environment Files ===
+.env
+.env.*
+!.env.example
