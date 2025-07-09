@@ -49,8 +49,7 @@ def connect_wifi():
 
     return jsonify(result)
 
-<<<<<<< HEAD
-=======
+
 @app.route("/get-wifi-result", methods=["GET"])
 def get_wifi_result():
     try:
@@ -58,7 +57,53 @@ def get_wifi_result():
     except FileNotFoundError:
         return jsonify({"resultCode": "-111", "message": "no result found"}), 404
 
->>>>>>> f79493aec23558253ac27609c193e3e8453a71ab
+
+@app.route("/connect-cloud", methods=["POST"])
+def connect_cloud():
+    data = request.json
+
+    try:
+        response = requests.post("http://localhost:9092/connectDeviceByCloud", params={
+            "code": data.get("code"),
+            "eid": data.get("eid")
+        })
+
+        data = response.json()
+        success = (
+            response.status_code == 200 and
+            data.get("resultCode") == "200" and
+            data.get("message") == "connect success"
+        )
+
+        if success:
+            result = {
+                "resultCode": "200",
+                "message": "connect success",
+                "sn": data.get("sn")
+            }
+        else:
+            result = {
+                "resultCode": "-11",
+                "message": "code is invalid"
+            }
+
+    except Exception:
+        result = {
+            "resultCode": "-11",
+            "message": "code is invalid"
+        }
+
+    return jsonify(result)
+
+
+@app.route("/get-cloud-result", methods=["GET"])
+def get_cloud_result():
+    try:
+        return send_file("resultCloud.json", mimetype='application/json')
+    except FileNotFoundError:
+        return jsonify({"resultCode": "-111", "message": "no result found"}), 404
+    
+
 def list_directory(path):
     items = []
     for entry in os.scandir(path):

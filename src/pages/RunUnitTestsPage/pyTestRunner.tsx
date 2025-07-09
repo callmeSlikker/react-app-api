@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { ConnectDeviceToWifiSection } from "./ConnectDeviceToWifi/ConnectDeviceToWifiSection.tsx";
+import { ConnectDeviceToWifiSection } from "./ConnectDevice/ConnectDeviceToWifiSection.tsx";
+import { ConnectDeviceToCloudSection } from "./ConnectDevice/ConnectDeviceToCloudSection.tsx";
 import { RunUnitTestsResultSection } from "./RunUnitTestsResult/RunUnitTestsResultSection.tsx";
 import { UnitTestResult } from "./RunUnitTestsResult/RunUnitTestResult.tsx";
 import FileTreeView, { FileNodeType } from "./FileTest/FileTreeView.tsx";
@@ -79,11 +80,13 @@ export default function PyTestRunner() {
   return (
     <div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
       <div style={{ display: "flex", flex: 1 }}>
-        <div style={{ width: "20%", padding: "8px", display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between" }}>
-          <ConnectDeviceToWifiSection />
-          <p style={{ fontFamily: "revert-layer", fontSize: 20, fontWeight: 1000, marginBottom: 10, marginTop: 25 }}>Menu</p>
-          <p style={{ fontFamily: "revert-layer", fontSize: 18, fontWeight: 700, marginBottom: 10, marginTop: 0 }}>select test files</p>
-          <div style={{ marginTop: 20, marginBottom: 20, height: "50%" }}>
+        <div style={{ width: "20%", padding: "8px", display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between", marginTop: 25 }}>
+          <div>
+            <div style={{marginBottom: 10}}><ConnectDeviceToCloudSection/></div>
+            <div style={{marginBottom: 10}}><ConnectDeviceToWifiSection/></div>
+          </div>
+
+          <div style={{ marginTop: 20, marginBottom: 20, height: "100%" }}>
             <FileTreeView fileTree={fileTree} selectedFiles={selectedFiles} toggleFile={toggleFile} />
           </div>
           <div style={{ marginTop: 20, marginBottom: 20 }}>
@@ -93,7 +96,7 @@ export default function PyTestRunner() {
 
         <div style={{ width: "80%", padding: "8px", display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
-            <p style={{ fontFamily: "revert-layer", fontSize: 20, fontWeight: 1000, marginBottom: 10, marginTop: 25, width: "25%" }}>
+            <p style={{ fontFamily: "revert-layer", fontSize: 20, fontWeight: 1000, marginBottom: 10, width: "25%" }}>
               Result
             </p>
             <button

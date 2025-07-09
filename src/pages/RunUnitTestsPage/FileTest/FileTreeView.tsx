@@ -43,29 +43,32 @@ const FileNode: React.FC<FileNodeProps> = ({ node, toggle, path, selected }) => 
 
   if (node.type === "folder") {
     return (
-      <div style={{ marginLeft: 20 }}>
-        <label style={{ cursor: "pointer", fontWeight: "bold" }}>
-          <input
-            type="checkbox"
-            checked={isFolderSelected()}
-            onChange={handleFolderCheckboxChange}
-            style={{ marginRight: 5 }}
-          />
-          <span onClick={() => setOpen(!open)}>
-            {open ? "📂" : "📁"} {node.name}
-          </span>
-        </label>
-        {open &&
-          node.children?.map((child) => (
-            <FileNode
-              key={`${currentPath}/${child.name}`}
-              node={child}
-              toggle={toggle}
-              path={currentPath}
-              selected={selected}
+      <>
+        <div style={{ marginLeft: 20 }}>
+          <label style={{ cursor: "pointer", fontWeight: "bold" }}>
+            <input
+              type="checkbox"
+              checked={isFolderSelected()}
+              onChange={handleFolderCheckboxChange}
+              style={{ marginRight: 5 }}
             />
-          ))}
-      </div>
+            <span onClick={() => setOpen(!open)}>
+              {open ? "📂" : "📁"} {node.name}
+            </span>
+          </label>
+          {open &&
+            node.children?.map((child) => (
+              <FileNode
+                key={`${currentPath}/${child.name}`}
+                node={child}
+                toggle={toggle}
+                path={currentPath}
+                selected={selected}
+              />
+            ))}
+        </div>
+      </>
+
     );
   }
 
@@ -95,6 +98,10 @@ export default function FileTreeView({
 }) {
   return (
     <div>
+      <div>
+        <p style={{ fontFamily: "revert-layer", fontSize: 20, fontWeight: 1000, margin:0 }}>Teat Case 🗄️</p>
+        <p style={{ fontFamily: "revert-layer", fontSize: 18, fontWeight: 700, marginBottom: 10, marginTop: 10 }}>select test files</p>
+      </div>
       {fileTree.length === 0 ? (
         <p>Loading...</p>
       ) : (

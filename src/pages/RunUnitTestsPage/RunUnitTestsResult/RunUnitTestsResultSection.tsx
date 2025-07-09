@@ -15,23 +15,25 @@ export function RunUnitTestsResultSection({
                 style={{
                     fontSize: 18,
                     fontWeight: 700,
-                    marginBottom: 10,
-                    marginTop: 0,
+                    marginTop: 0
                 }}
             >
                 Request + Response
             </p>
             <div style={{
                 overflowY: "auto",
-                maxHeight: "75vh"
+                maxHeight: "75vh",
+                paddingBottom: 10,
+                paddingLeft: 20,
+
             }}>
                 {results?.map((eachLoopResults, index) => (
                     <Fragment key={index}>
-                        <p style={{ fontWeight: 600, marginBottom: 10, marginRight: 10 }}>Loop : {index + 1}</p>
+                        <p style={{ fontWeight: 1000, marginBottom: 10, marginRight: 10, fontSize:18 }}>Loop : {index + 1}</p>
                         <RunUnitTestResult results={eachLoopResults} />
                     </Fragment>
                 ))}
-            </div>
+            </div >
         </>
     );
 }

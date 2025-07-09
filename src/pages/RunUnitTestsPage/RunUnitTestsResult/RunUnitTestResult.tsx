@@ -21,24 +21,16 @@ interface RunUnitTestsResultProps {
 
 export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
   return (
-    <div
-      style={{
-        padding: 20,
-        border: "1px solid #ccc",
-        borderRadius: 10,
-        background: "#f9fafb",
-      }}
-    >
+    <div>
       {results?.map((test, i) => (
-        <div key={i} style={{ marginBottom: 30 }}>
-          <p style={{ fontWeight: 600, marginBottom: 10, marginRight: 10 }}>{test.fileName}</p>
+        <div key={i} style={{ border: `2px solid #FFBC00`,background: "#FFCA1A", borderRadius: 5, padding: 10, marginBottom: 10 }}>
+          <p style={{ fontSize: 16, fontWeight: 800 }}>{test.fileName}</p>
 
           {test.error && (
             <div
               style={{
                 color: "red",
                 fontWeight: "bold",
-                marginBottom: 10,
               }}
             >
               File Error: {test.error}
@@ -52,8 +44,8 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
               <div
                 key={j}
                 style={{
-                  border: `2px solid ${hasErrors ? "#dc2626" : "#16a34a"}`,
-                  backgroundColor: hasErrors ? "#fee2e2" : "#d1fae5",
+                  border: `2px solid ${hasErrors ? "red" : "green"}`,
+                  backgroundColor: hasErrors ? "#ffffff" : "#ffffff",
                   borderRadius: 10,
                   padding: 15,
                   marginBottom: 15,
@@ -63,41 +55,42 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                   {result.function} {hasErrors ? "Failed" : "Passed"}
                 </p>
 
-                <div style={{ marginTop: 10 }}>
-                  <strong>Request:</strong>
-                  <pre
-                    style={{
-                      background: "#f3f4f6",
-                      padding: 10,
-                      borderRadius: 8,
-                      fontSize: 14,
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    {JSON.stringify(result.request, null, 2)}
-                  </pre>
+                <div style={{ display: "flex", gap: 20, marginTop: 10 }}>
+                  <div style={{ flex: 1 }}>
+                    <strong style={{ fontSize: 14 }}>Request:</strong>
+                    <pre
+                      style={{
+                        padding: 10,
+                        borderRadius: 8,
+                        fontSize: 14,
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      {JSON.stringify(result.request, null, 2)}
+                    </pre>
+                  </div>
+
+                  <div style={{ flex: 1 }}>
+                    <strong style={{ fontSize: 14 }}>Response Body:</strong>
+                    <pre
+                      style={{
+                        padding: 10,
+                        borderRadius: 8,
+                        fontSize: 14,
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      {JSON.stringify(result.response.body, null, 2)}
+                    </pre>
+                  </div>
                 </div>
 
-                <div style={{ marginTop: 10 }}>
-                  <strong>Response Body:</strong>
-                  <pre
-                    style={{
-                      background: "#f3f4f6",
-                      padding: 10,
-                      borderRadius: 8,
-                      fontSize: 14,
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    {JSON.stringify(result.response.body, null, 2)}
-                  </pre>
-                </div>
 
                 {hasErrors && (
-                  <div style={{ marginTop: 10 }}>
+                  <div style={{ fontSize: 14 }}>
                     <strong style={{ color: "#dc2626" }}>Errors:</strong>
                     <ul style={{ color: "#b91c1c", paddingLeft: 20 }}>
-                      {result?.error?.map((err, k) => ( 
+                      {result?.error?.map((err, k) => (
                         <li key={k}>{err}</li>
                       ))}
                     </ul>
