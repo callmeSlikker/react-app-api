@@ -63,23 +63,24 @@ def connect_cloud():
     data = request.json
 
     try:
-        response = requests.post("http://localhost:9092/connectDeviceByCloud", params={
+        response = requests.post("http://localhost:9092/connectDeviceByCloud", 
+        json={
             "code": data.get("code"),
             "eid": data.get("eid")
         })
 
-        data = response.json()
+        response_data = response.json()
         success = (
             response.status_code == 200 and
-            data.get("resultCode") == "200" and
-            data.get("message") == "connect success"
+            response_data.get("resultCode") == "200" and
+            response_data.get("message") == "connect success"
         )
 
         if success:
             result = {
                 "resultCode": "200",
                 "message": "connect success",
-                "sn": data.get("sn")
+                "sn": response_data.get("sn")
             }
         else:
             result = {
@@ -101,7 +102,7 @@ def get_cloud_result():
     try:
         return send_file("resultCloud.json", mimetype='application/json')
     except FileNotFoundError:
-        return jsonify({"resultCode": "-111", "message": "no result found"}), 404
+        return jsonify({"resultCode": "-11", "message": "code is invalid"}), 404
     
 
 def list_directory(path):
@@ -153,7 +154,9 @@ def start_tests():
                     capture_output=True, text=True, timeout=60
                 )
                 responseArray = result.stdout.strip().split('\n')
+                print("responseArray", responseArray)
                 parsedApiResults = json.loads(responseArray[6].split(".py ")[1])
+                print("parsedApiResults", parsedApiResults)
                 each_loop_results.append({
                     "fileName": file,
                     "data": parsedApiResults

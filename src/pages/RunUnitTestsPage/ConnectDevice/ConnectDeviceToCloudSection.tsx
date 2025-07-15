@@ -9,7 +9,7 @@ export function ConnectDeviceToCloudSection() {
 
   const connectToDevice = async () => {
     try {
-      const res = await axios.post("http://127.0.0.1:5001/connect-cloud", { code, eid });
+      const res = await axios.post("http://localhost:9092/connectDeviceByCloud", { code, eid });
       const data = res.data;
 
       if (res.status === 200 && data.resultCode === "200" && data.message === "connect success") {

@@ -82,11 +82,19 @@ export default function PyTestRunner() {
       <div style={{ display: "flex", flex: 1 }}>
         <div style={{ width: "20%", padding: "8px", display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between", marginTop: 25 }}>
           <div>
-            <div style={{marginBottom: 10}}><ConnectDeviceToCloudSection/></div>
-            <div style={{marginBottom: 10}}><ConnectDeviceToWifiSection/></div>
+            <div style={{ marginBottom: 10 }}><ConnectDeviceToCloudSection /></div>
+            <div style={{ marginBottom: 25 }}><ConnectDeviceToWifiSection /></div>
+            <div>
+              <p style={{ fontFamily: "revert-layer", fontSize: 20, fontWeight: 1000, margin: 0 }}>Test Case 🗄️</p>
+              <p style={{ fontFamily: "revert-layer", fontSize: 18, fontWeight: 700, marginBottom: 10, marginTop: 10 }}>select test files</p>
+            </div>
           </div>
-
-          <div style={{ marginTop: 20, marginBottom: 20, height: "100%" }}>
+          <div style={{
+            marginTop: 20,
+            marginBottom: 20,
+            maxHeight: "50vh",
+            overflowY: "auto",
+          }}>
             <FileTreeView fileTree={fileTree} selectedFiles={selectedFiles} toggleFile={toggleFile} />
           </div>
           <div style={{ marginTop: 20, marginBottom: 20 }}>

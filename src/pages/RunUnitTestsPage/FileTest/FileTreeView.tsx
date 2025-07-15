@@ -44,7 +44,7 @@ const FileNode: React.FC<FileNodeProps> = ({ node, toggle, path, selected }) => 
   if (node.type === "folder") {
     return (
       <>
-        <div style={{ marginLeft: 20 }}>
+        <div style={{marginLeft: 20}}>
           <label style={{ cursor: "pointer", fontWeight: "bold" }}>
             <input
               type="checkbox"
@@ -98,10 +98,6 @@ export default function FileTreeView({
 }) {
   return (
     <div>
-      <div>
-        <p style={{ fontFamily: "revert-layer", fontSize: 20, fontWeight: 1000, margin:0 }}>Teat Case 🗄️</p>
-        <p style={{ fontFamily: "revert-layer", fontSize: 18, fontWeight: 700, marginBottom: 10, marginTop: 10 }}>select test files</p>
-      </div>
       {fileTree.length === 0 ? (
         <p>Loading...</p>
       ) : (
