@@ -4,14 +4,13 @@ import os
 import subprocess
 import json
 import requests
-#import time
-
-from test.common.request import requestWithValidation
+import time
+from tests.common.request import requestWithValidation
 
 app = Flask(__name__)
 CORS(app)
 
-BASE_DIR = os.path.join(os.path.dirname(__file__), "test", "testCase")
+BASE_DIR = os.path.join(os.path.dirname(__file__), "tests", "testCase")
 HEADERS = {"Content-Type": "application/json"}
 
 @app.route("/connect-wifi", methods=["POST"])
@@ -23,6 +22,7 @@ def connect_wifi():
             "port": data.get("port"),
             "host": data.get("host")
         })
+        print("responseafdas", response)
         data = response.json()
         success = (
 
@@ -143,18 +143,19 @@ def start_tests():
 
     pytest_results = []
 
-    for _ in range(loop_count):
+    for i in range(loop_count):
         each_loop_results = []
 
         for file in selected_files:
             file_path = os.path.join(BASE_DIR, file.lstrip("/\\"))
+            print("file_path", file_path)
             try:
                 result = subprocess.run(
                     ["pytest", "-s", file_path],
                     capture_output=True, text=True, timeout=60
                 )
                 responseArray = result.stdout.strip().split('\n')
-                print("responseArray", responseArray)
+                print("responseArraysdfsafsdfs", responseArray)
                 parsedApiResults = json.loads(responseArray[6].split(".py ")[1])
                 print("parsedApiResults", parsedApiResults)
                 each_loop_results.append({
@@ -168,10 +169,15 @@ def start_tests():
                 })
 
         pytest_results.append(each_loop_results)
-    
+
+        if i < loop_count - 1:
+            print(f"Finished round {i+1}, waiting 3 seconds before next loop...")
+            time.sleep(3)
+
     print("pytest_resultsasdf", pytest_results)
 
     return pytest_results
+
 
 @app.route("/settlement", methods=["POST"])
 def settlement():
@@ -183,7 +189,36 @@ def settlement():
             "acquirerNameList": ["acquirer0"]
         }
     }
-    requestWithValidation("Create Settlement", "post", url, data)
+    try:
+        response = requestWithValidation("Create Settlement", "post", url, data)
+
+        data = response.json()
+        success = (
+
+            response.status_code == 200 and
+            data.get("resultCode") == "200" and
+            data.get("message") == "settlement success"
+        )
+        if success:
+            result = {
+                "resultCode": "200",
+                "message": "settlement success"
+            }
+        else:
+            result = {
+                "resultCode": "-111",
+                "message": "settlement error"
+            }
+
+    except Exception:
+        result = {
+            "resultCode": "-111",
+            "message": "settlement error"
+        }
+
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
+
+#time.sleep(10)
