@@ -12,13 +12,13 @@ def test_sale_qr():
             },
             "detail":
             {
-                "amountValue": 15.00
+                "amountValue": 1.00
             }
         }
     }
 
     expected_response = {
-        "amount": "1500",
+        "amount": "100",
         "voucherNo": "ANY_VALUE",
     }
 
