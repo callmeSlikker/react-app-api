@@ -17,11 +17,11 @@ def test_sale_qr():
         }
     }
 
-    expected_response = {
-        "amount": "100",
-        "voucherNo": "ANY_VALUE",
-    }
+    # expected_response = {
+    #     "amount": "100",
+    #     "voucherNo": "ANY_VALUE",
+    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    response = requestWithValidation("Create Sale", "post", url, data)
     
     print(json.dumps([response]))

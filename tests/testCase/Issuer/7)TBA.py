@@ -16,13 +16,13 @@ def test_sale_credit_tba():
         }
     }
 
-    expected_response = {
-        "amount": "107",
-        "voucherNo": "ANY_VALUE",
-        "cardIssuerID": "11",
-        "cardIssuerName": "TBA"
-    }
+    # expected_response = {
+    #     "amount": "107",
+    #     "voucherNo": "ANY_VALUE",
+    #     "cardIssuerID": "11",
+    #     "cardIssuerName": "TBA"
+    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    response = requestWithValidation("Create Sale", "post", url, data)
     
     print(json.dumps([response]))

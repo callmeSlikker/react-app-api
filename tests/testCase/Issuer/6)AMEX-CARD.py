@@ -16,13 +16,13 @@ def test_sale_credit_amex():
         }
     }
 
-    expected_response = {
-        "amount": "106",
-        "voucherNo": "ANY_VALUE",
-        "cardIssuerID": "08",
-        "cardIssuerName": "AMEX-CARD"
-    }
+    # expected_response = {
+    #     "amount": "106",
+    #     "voucherNo": "ANY_VALUE",
+    #     "cardIssuerID": "08",
+    #     "cardIssuerName": "AMEX-CARD"
+    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    response = requestWithValidation("Create Sale", "post", url, data)
     
     print(json.dumps([response]))

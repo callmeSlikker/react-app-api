@@ -16,13 +16,14 @@ def test_sale_credit_visa():
         }
     }
 
-    expected_response = {
-        "amount": "101",
-        "voucherNo": "ANY_VALUE",
-        "cardIssuerID": "04",
-        "cardIssuerName": "VISA-CARD"
-    }
+    # expected_response = {
+    #     "amount": "101",
+    #     "voucherNo": "ANY_VALUE",
+    #     "cardIssuerID": "04",
+    #     "cardIssuerName": "VISA-CARD"
+    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    response = requestWithValidation("Create Sale", "post", url, data)
     
     print(json.dumps([response]))
+

@@ -11,15 +11,6 @@ export function RunUnitTestsResultSection({
 }: RunUnitTestsResultSectionProps) {
     return (
         <>
-            <p
-                style={{
-                    fontSize: 18,
-                    fontWeight: 700,
-                    marginTop: 0
-                }}
-            >
-                Request + Response
-            </p>
             <div style={{
                 overflowY: "auto",
                 maxHeight: "75vh",

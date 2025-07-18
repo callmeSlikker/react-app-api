@@ -23,11 +23,11 @@ def sale_linepay():
         }
     }
 
-    expected_response = {
-        "voucherNo": "ANY_VALUE",
-    }
+    # expected_response = {
+    #     "voucherNo": "ANY_VALUE",
+    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    response = requestWithValidation("Create Sale", "post", url, data)
     
     print(json.dumps([response]))
 

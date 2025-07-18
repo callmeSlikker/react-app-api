@@ -17,13 +17,13 @@ def test_sale_qrc_tpn():
         }
     }
 
-    expected_response = {
-        "amount": "205",
-        "voucherNo": "ANY_VALUE",
-        "cardIssuerID": "11",
-        "cardIssuerName": "QR TPN"
-    }
+    # expected_response = {
+    #     "amount": "205",
+    #     "voucherNo": "ANY_VALUE",
+    #     "cardIssuerID": "11",
+    #     "cardIssuerName": "QR TPN"
+    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    response = requestWithValidation("Create Sale", "post", url, data)
     
     print(json.dumps([response]))

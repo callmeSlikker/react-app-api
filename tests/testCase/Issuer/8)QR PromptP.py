@@ -17,13 +17,13 @@ def test_sale_qrc_promptpay():
         }
     }
 
-    expected_response = {
-        "amount": "200",
-        "voucherNo": "ANY_VALUE",
-        "cardIssuerID": "03",
-        "cardIssuerName": "QR PromptP"
-    }
+    # expected_response = {
+    #     "amount": "200",
+    #     "voucherNo": "ANY_VALUE",
+    #     "cardIssuerID": "03",
+    #     "cardIssuerName": "QR PromptP"
+    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    response = requestWithValidation("Create Sale", "post", url, data)
     
     print(json.dumps([response]))

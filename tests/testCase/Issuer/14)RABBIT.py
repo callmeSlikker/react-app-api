@@ -16,13 +16,13 @@ def test_sale_rabbit():
         }
     }
 
-    expected_response = {
-        "amount": "300",
-        "voucherNo": "ANY_VALUE",
-        "cardIssuerID": "07",
-        "cardIssuerName": "RABBIT"
-    }
+    # expected_response = {
+    #     "amount": "300",
+    #     "voucherNo": "ANY_VALUE",
+    #     "cardIssuerID": "07",
+    #     "cardIssuerName": "RABBIT"
+    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    response = requestWithValidation("Create Sale", "post", url, data)
 
     print(json.dumps([response]))

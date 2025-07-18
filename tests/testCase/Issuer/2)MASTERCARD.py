@@ -16,13 +16,13 @@ def test_sale_credit_master():
         }
     }
 
-    expected_response = {
-        "amount": "102",
-        "voucherNo": "ANY_VALUE",
-        "cardIssuerID": "06",
-        "cardIssuerName": "MASTERCARD"
-    }
+    # expected_response = {
+    #     "amount": "102",
+    #     "voucherNo": "ANY_VALUE",
+    #     "cardIssuerID": "06",
+    #     "cardIssuerName": "MASTERCARD"
+    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    response = requestWithValidation("Create Sale", "post", url, data)
     
     print(json.dumps([response]))

@@ -6,6 +6,7 @@ export function ConnectDeviceToCloudSection() {
   const [isOpen, setIsOpen] = useState(false);
   const [code, setHost] = useState("00000");
   const [eid, setPort] = useState(9000041);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
 
   const connectToDevice = async () => {
     try {
@@ -14,12 +15,22 @@ export function ConnectDeviceToCloudSection() {
 
       if (res.status === 200 && data.resultCode === "200" && data.message === "connect success") {
         Swal.fire("Connected", "Device connected successfully", "success");
+        setStatus("success");     
+        setIsOpen(false);          
       } else {
         Swal.fire("Failed", "Connect error", "error");
+        setStatus("error");       
       }
     } catch (error) {
       Swal.fire("Error", "Unable to connect", "error");
+      setStatus("error");        
     }
+  };
+
+  const getStatusIcon = () => {
+    if (status === "success") return "🟢";
+    if (status === "error") return "🔴";
+    return "⌛";
   };
 
   return (
@@ -27,9 +38,9 @@ export function ConnectDeviceToCloudSection() {
       {/* Clickable Text */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        style={{ fontFamily: "revert-layer", fontSize: 20, fontWeight: 1000}}
+        style={{ fontFamily: "revert-layer", fontSize: 20, fontWeight: 1000, cursor: "pointer" }}
       >
-        🌩️ Cloud Connect
+        Cloud Connect {getStatusIcon()}
       </div>
 
       {/* Dropdown Form */}
