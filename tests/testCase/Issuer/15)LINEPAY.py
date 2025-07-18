@@ -1,5 +1,5 @@
 import json
-from src.tests.common.request import requestWithValidation
+from tests.common.request import requestWithValidation
 
 
 def test_sale_linepay():
@@ -22,13 +22,12 @@ def test_sale_linepay():
             }
         }
     }
-
-        expected_response = {
-        "VATAmount": 12345678.00,
-        "campaignType": "123456",
+    expected_response = {
+        "voucherNo": "ANY_VALUE",
+        "cardIssuerID": "09",
+        "cardIssuerName": "LINEPAY"
     }
 
-    response = requestWithValidation("Create Sale", "post", url, data, {
-        "formatVersion": "1",
-    })
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    
     print(json.dumps([response]))

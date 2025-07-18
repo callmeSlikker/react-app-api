@@ -94,7 +94,7 @@ export default function PyTestRunner() {
             marginBottom: 20,
             maxHeight: "50vh",
             overflowY: "auto",
-          }}>
+         }}>
             <FileTreeView fileTree={fileTree} selectedFiles={selectedFiles} toggleFile={toggleFile} />
           </div>
           <div style={{ marginTop: 20, marginBottom: 20 }}>

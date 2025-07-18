@@ -11,13 +11,13 @@ def test_sale_wallet():
                 "endPointNamespace": "com.pax.edc.bpsp"
             },
             "detail": {
-                "amountValue": 3.00
+                "amountValue": 4.00
             }
         }
     }
 
     expected_response = {
-        "amount": "300",
+        "amount": "400",
         "voucherNo": "ANY_VALUE",
         "cardIssuerID": "01",
         "cardIssuerName": "WALLET"

@@ -1,33 +1,29 @@
 import json
 from tests.common.request import requestWithValidation
 
-
-def sale_linepay():
+def test_sale_qrc_master():
     url = "http://localhost:9092/createRequest"
     data = {
-    "CATEGORY": "com.pax.payment.SaleLinePay",
+        "CATEGORY": "com.pax.payment.SaleQR",
         "parm": {
-            "header": 
-            {
+            "header": {
                 "formatVersion": "1",
                 "endPointNamespace": "com.pax.edc.bpsp"
             },
             "detail":
             {
-                "VATAmount": 12345678.00,
-                "taxAllowanceAmoun": 12345678.00,
-                "merchantUniqueValue": "12345678901234567890",
-                "campaignType": "123456",
-                "marchantTaxID": "12345678901234567890"
+                "amountValue": 2.02
             }
         }
     }
 
     expected_response = {
+        "amount": "202",
         "voucherNo": "ANY_VALUE",
+        "cardIssuerID": "06",
+        "cardIssuerName": "QR MASTER"
     }
 
     response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))
-
