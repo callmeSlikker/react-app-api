@@ -14,21 +14,25 @@ def test_sale_linepay():
             },
             "detail":
             {
-                "VATAmount": 12345678.00,
-                "taxAllowanceAmoun": 12345678.00,
-                "merchantUniqueValue": "12345678901234567890",
-                "campaignType": "123456",
-                "marchantTaxID": "12345678901234567890"
+                "amountValue": 3.00
             }
         }
     }
 
-    # expected_response = {
-    #     "voucherNo": "ANY_VALUE",
-    #     "cardIssuerID": "09",
-    #     "cardIssuerName": "LINEPAY"
-    # }
+    expected_response = {
+        "detail.expiredDate":"XXXX",
+        "detail.cardIssuerName": "LINEPAY",
+        "detail.cardIssuerID": "09",
+        "detail.merchantNameInSlipL1": "Merchant 1",
+        "detail.addressInSlipL2": "normal functions",
+        "detail.addressInSlipL3": "A920",
+        "header.terminalID": "99933468",
+        "detail.merchantID":"000002200869253",
+        "header.responseCode": "00",
+    }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
+
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))
+

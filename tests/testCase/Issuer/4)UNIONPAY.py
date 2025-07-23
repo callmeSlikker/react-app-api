@@ -16,13 +16,15 @@ def test_sale_credit_unionpay():
         }
     }
 
-    # expected_response = {
-    #     "amount": "104",
-    #     "voucherNo": "ANY_VALUE",
-    #     "cardIssuerID": "10",
-    #     "cardIssuerName": "UNIONPAY"
-    # }
+    expected_response = {
+        "detail.cardIssuerName": "UNIONPAY",
+        "detail.cardIssuerID": "10",
+        "detail.merchantNameInSlipL1": "Merchant 1",
+        "detail.addressInSlipL2": "normal functions",
+        "detail.addressInSlipL3": "A920",
+        "header.terminalID": "25296696",
+    }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))

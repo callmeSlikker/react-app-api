@@ -20,7 +20,7 @@ export function RunUnitTestsResultSection({
             }}>
                 {results?.map((eachLoopResults, index) => (
                     <Fragment key={index}>
-                        <p style={{ fontWeight: 1000, marginBottom: 10, marginRight: 10, fontSize:18 }}>Loop : {index + 1}</p>
+                        <p style={{ fontWeight: 1000, marginBottom: 10, marginRight: 10, fontSize: 18 }}>Loop : {index + 1}</p>
                         <RunUnitTestResult results={eachLoopResults} />
                     </Fragment>
                 ))}

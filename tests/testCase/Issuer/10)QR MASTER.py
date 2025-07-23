@@ -17,13 +17,18 @@ def test_sale_qrc_master():
         }
     }
 
-    # expected_response = {
-    #     "amount": "202",
-    #     "voucherNo": "ANY_VALUE",
-    #     "cardIssuerID": "06",
-    #     "cardIssuerName": "QR MASTER"
-    # }
+    expected_response = {
+        "detail.expiredDate":"XXXX",
+        "detail.cardIssuerName": "QR MASTER",
+        "detail.cardIssuerID": "06",
+        "detail.merchantNameInSlipL1": "Merchant 1",
+        "detail.addressInSlipL2": "normal functions",
+        "detail.addressInSlipL3": "A920",
+        "header.terminalID": "47848651",
+        "detail.merchantID":"000002200869253",
+        "header.responseCode": "00",
+    }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))

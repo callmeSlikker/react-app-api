@@ -16,13 +16,15 @@ def test_sale_credit_diners():
         }
     }
 
-    # expected_response = {
-    #     "amount": "105",
-    #     "voucherNo": "ANY_VALUE",
-    #     "cardIssuerID": "12",
-    #     "cardIssuerName": "DINERS"
-    # }
+    expected_response = {
+        "detail.cardIssuerName": "DINERS",
+        "detail.cardIssuerID": "12",
+        "detail.merchantNameInSlipL1": "Merchant 1",
+        "detail.addressInSlipL2": "normal functions",
+        "detail.addressInSlipL3": "A920",
+        "header.terminalID": "25296696",
+    }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))

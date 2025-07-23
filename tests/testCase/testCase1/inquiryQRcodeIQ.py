@@ -14,14 +14,12 @@ def inquiry_qr():
             },
             "detail":
             {
-                "QRType": "12",
-                "trace": "000001"
+                "QRType": "01",
+                "trace": "002266"
             }
         }
     }
 
-    response = requestWithValidation("Create Sale", "post", url, data, {
-        "formatVersion": "1",
-        "QRType": "12"
-    })
+    response = requestWithValidation("Create Sale", "post", url, data)
+    
     print(json.dumps([response]))

@@ -16,13 +16,16 @@ def test_sale_credit_master():
         }
     }
 
-    # expected_response = {
-    #     "amount": "102",
-    #     "voucherNo": "ANY_VALUE",
-    #     "cardIssuerID": "06",
-    #     "cardIssuerName": "MASTERCARD"
-    # }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
+    expected_response = {
+        "detail.cardIssuerName": "MASTERCARD",
+        "detail.cardIssuerID": "06",
+        "detail.merchantNameInSlipL1": "Merchant 1",
+        "detail.addressInSlipL2": "normal functions",
+        "detail.addressInSlipL3": "A920",
+        "header.terminalID": "50118674",
+    }
+
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))

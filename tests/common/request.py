@@ -1,11 +1,28 @@
 import requests
 import json
+from datetime import datetime
+
+def is_today(date_str):
+    try:
+        return datetime.strptime(date_str, "%d%m%y").date() == datetime.today().date()
+    except:
+        return False
+
+def get_nested_value(data, dotted_key):
+    keys = dotted_key.split(".")
+    for key in keys:
+        if isinstance(data, dict):
+            data = data.get(key)
+        else:
+            return None
+    return data
 
 def requestWithValidation(functionName, method, url, request, expect=None):
     try:
         response = requests.request(method, url, json=request, headers={"Content-Type": "application/json"})
         json_response = response.json()
         errors = []
+        success = []
         inner_response = None
 
         if 'response' in json_response:
@@ -13,12 +30,15 @@ def requestWithValidation(functionName, method, url, request, expect=None):
 
             if expect:  # Only run validation if `expect` is provided and not None
                 for key, expected_value in expect.items():
-                    actual_value = inner_response.get(key)
+                    actual_value = get_nested_value(inner_response, key)
                     if expected_value == "ANY_VALUE":
                         if actual_value is None:
                             errors.append(f"Expected {key} to exist, but it's missing or None")
                     elif expected_value != actual_value:
                         errors.append(f"Expect {key} to be {expected_value}, but got {actual_value}")
+                    else:
+                        success.append(f"Expect {key} to be {expected_value}")
+
         else:
             errors.append(f"No response from device")
 
@@ -30,7 +50,8 @@ def requestWithValidation(functionName, method, url, request, expect=None):
                 "body": inner_response,
                 "message": json_response.get("message")
             },
-            "error": errors if errors else None
+            "error": errors if errors else None,
+            "success": success if success else None
         }
 
     except Exception as e:

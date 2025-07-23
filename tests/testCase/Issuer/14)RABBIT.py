@@ -16,13 +16,18 @@ def test_sale_rabbit():
         }
     }
 
-    # expected_response = {
-    #     "amount": "300",
-    #     "voucherNo": "ANY_VALUE",
-    #     "cardIssuerID": "07",
-    #     "cardIssuerName": "RABBIT"
-    # }
+    expected_response = {
+        "detail.expiredDate":"XXXX",
+        "detail.cardIssuerName": "RABBIT",
+        "detail.cardIssuerID": "07",
+        "detail.merchantNameInSlipL1": "Merchant 1",
+        "detail.addressInSlipL2": "normal functions",
+        "detail.addressInSlipL3": "A920",
+        "header.terminalID": "99933468",
+        "detail.merchantID":"000002200869253",
+        "header.responseCode": "00",
+    }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
-
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
+    
     print(json.dumps([response]))

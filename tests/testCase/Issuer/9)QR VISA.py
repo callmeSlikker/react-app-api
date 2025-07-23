@@ -17,13 +17,15 @@ def test_sale_qrc_visa():
         }
     }
 
-    # expected_response = {
-    #     "amount": "201",
-    #     "voucherNo": "ANY_VALUE",
-    #     "cardIssuerID": "04",
-    #     "cardIssuerName": "QR VISAR"
-    # }
+    expected_response = {
+        "detail.cardIssuerName": "QR VISA",
+        "detail.cardIssuerID": "04",
+        "detail.merchantNameInSlipL1": "Merchant 1",
+        "detail.addressInSlipL2": "normal functions",
+        "detail.addressInSlipL3": "A920",
+        "header.terminalID": "47848651",
+    }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))

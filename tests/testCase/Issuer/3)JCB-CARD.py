@@ -16,13 +16,15 @@ def test_sale_credit_jcb():
         }
     }
 
-    # expected_response = {
-    #     "amount": "103",
-    #     "voucherNo": "ANY_VALUE",
-    #     "cardIssuerID": "02",
-    #     "cardIssuerName": "JCB-CARD"
-    # }
+    expected_response = {
+        "detail.cardIssuerName": "JCB-CARD",
+        "detail.cardIssuerID": "02",
+        "detail.merchantNameInSlipL1": "Merchant 1",
+        "detail.addressInSlipL2": "normal functions",
+        "detail.addressInSlipL3": "A920",
+        "header.terminalID": "50118674",
+    }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))

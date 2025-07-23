@@ -17,13 +17,15 @@ def test_sale_qrc_tpn():
         }
     }
 
-    # expected_response = {
-    #     "amount": "205",
-    #     "voucherNo": "ANY_VALUE",
-    #     "cardIssuerID": "11",
-    #     "cardIssuerName": "QR TPN"
-    # }
+    expected_response = {
+        "detail.cardIssuerName": "QR TPN",
+        "detail.cardIssuerID": "11",
+        "detail.merchantNameInSlipL1": "Merchant 1",
+        "detail.addressInSlipL2": "normal functions",
+        "detail.addressInSlipL3": "A920",
+        "header.terminalID": "47848651",
+    }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))
