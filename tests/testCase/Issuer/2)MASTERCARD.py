@@ -16,14 +16,16 @@ def test_sale_credit_master():
         }
     }
 
-
     expected_response = {
+        "detail.expiredDate":"XXXX",
         "detail.cardIssuerName": "MASTERCARD",
         "detail.cardIssuerID": "06",
         "detail.merchantNameInSlipL1": "Merchant 1",
         "detail.addressInSlipL2": "normal functions",
         "detail.addressInSlipL3": "A920",
+        "detail.merchantID":"000002200869253",
         "header.terminalID": "50118674",
+        "header.responseCode": "00",
     }
 
     response = requestWithValidation("Create Sale", "post", url, data, expected_response)

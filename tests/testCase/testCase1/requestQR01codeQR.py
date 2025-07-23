@@ -1,7 +1,7 @@
 import json
 from tests.common.request import requestWithValidation
 
-def test_sale_qrc_tpn():
+def test_sale_qr01():
     url = "http://localhost:9092/createRequest"
     data = {
     "CATEGORY": "com.pax.payment.RequestQR",
@@ -13,7 +13,7 @@ def test_sale_qrc_tpn():
             },
             "detail":
             {
-                "amountValue": 15.00,
+                "amountValue": 1.01,
                 "QRType": "01"
             }
         }

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import QRCode from "react-qr-code";
 
 export interface UnitTestResult {
   fileName: string;
@@ -21,6 +22,49 @@ interface RunUnitTestsResultProps {
 }
 
 export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
+  const [visibleQR, setVisibleQR] = useState<Record<string, boolean>>({});
+  const [inquiryResponses, setInquiryResponses] = useState<Record<string, any>>(
+    {}
+  );
+
+  const toggleQR = (key: string) => {
+    setVisibleQR((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const handleInquiry = async (
+    qrKey: string,
+    qrType: string,
+    invoiceTraceNumber: string
+  ) => {
+    try {
+      const res = await fetch("http://localhost:5001/inquiry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          qrType,
+          invoiceTraceNumber,
+        }),
+      });
+
+      const data = await res.json();
+      setInquiryResponses((prev) => ({
+        ...prev,
+        [qrKey]: data,
+      }));
+    } catch (err) {
+      console.error("Inquiry failed", err);
+      setInquiryResponses((prev) => ({
+        ...prev,
+        [qrKey]: { error: "Failed to fetch inquiry" },
+      }));
+    }
+  };
+
   const downloadVerticalCSV = () => {
     let csvContent = "";
 
@@ -139,6 +183,13 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
             const hasErrors = result.error && result.error.length > 0;
             const hasSuccess = result.success && result.success.length > 0;
 
+            const responseBody = result.response?.body as Record<string, any>;
+            const responseDetail = responseBody?.detail as
+              | Record<string, any>
+              | undefined;
+            const qrData = responseDetail?.QRData || "";
+            const qrKey = `${test.fileName}-${result.function}-${j}`;
+
             return (
               <div
                 key={j}
@@ -150,7 +201,9 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                   marginBottom: 15,
                 }}
               >
-                <p style={{ fontWeight: 600, marginBottom: 10, marginRight: 10 }}>
+                <p
+                  style={{ fontWeight: 600, marginBottom: 10, marginRight: 10 }}
+                >
                   {result.function} {hasErrors ? "Failed" : "Passed"}
                 </p>
 
@@ -184,6 +237,50 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                   </div>
                 </div>
 
+                {qrData && (
+                  <div style={{ marginTop: 10 }}>
+                    <button
+                      onClick={() => toggleQR(qrKey)}
+                      style={{
+                        padding: "6px 12px",
+                        backgroundColor: "#2563eb",
+                        color: "white",
+                        border: "none",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                      }}
+                    >
+                      {visibleQR[qrKey] ? "Hide QR Code" : "Show QR Code"}
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        handleInquiry(
+                          qrKey,
+                          responseDetail?.QRType,
+                          responseDetail?.invoiceTraceNumber
+                        )
+                      }
+                      style={{
+                        padding: "6px 12px",
+                        backgroundColor: "#10b981",
+                        color: "white",
+                        border: "none",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Inquiry
+                    </button>
+
+                    {visibleQR[qrKey] && (
+                      <div style={{ marginTop: 10 }}>
+                        <QRCode value={qrData} size={180} />
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {hasErrors && (
                   <div style={{ fontSize: 14 }}>
                     <strong style={{ color: "#dc2626" }}>Errors:</strong>
@@ -204,7 +301,6 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                     </ul>
                   </div>
                 )}
-
               </div>
             );
           })}

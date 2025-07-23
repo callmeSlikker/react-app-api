@@ -1,6 +1,7 @@
 import requests
 import json
 from datetime import datetime
+import pytz
 
 def is_today(date_str):
     try:
@@ -28,7 +29,15 @@ def requestWithValidation(functionName, method, url, request, expect=None):
         if 'response' in json_response:
             inner_response = json.loads(json_response['response'])
 
-            if expect:  # Only run validation if `expect` is provided and not None
+            if expect:
+                if "header" in inner_response and "transactionDate" in inner_response["header"]:
+                    thai_tz = pytz.timezone("Asia/Bangkok")
+                    thai_time = datetime.now(thai_tz)
+                    today_yy = thai_time.strftime("%y")
+                    today_mmdd = thai_time.strftime("%m%d")
+                    today_yymmdd = today_yy + today_mmdd
+                    expect["header.transactionDate"] = int(today_yymmdd)
+
                 for key, expected_value in expect.items():
                     actual_value = get_nested_value(inner_response, key)
                     if expected_value == "ANY_VALUE":

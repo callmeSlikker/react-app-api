@@ -26,7 +26,6 @@ def test_sale_credit_visa():
         "detail.merchantID":"000002200869253",
         "header.terminalID": "50118674",
         "header.responseCode": "00",
-        "header.transactionDate": "Today"
     }
 
 
