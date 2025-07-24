@@ -1,11 +1,10 @@
 import json
 from tests.common.request import requestWithValidation
 
-
-def inquiry_qr():
+def test_sale_qr01():
     url = "http://localhost:9092/createRequest"
     data = {
-    "CATEGORY": "com.pax.payment.Inquiry",
+    "CATEGORY": "com.pax.payment.RequestQR",
         "parm": {
             "header": 
             {
@@ -14,12 +13,19 @@ def inquiry_qr():
             },
             "detail":
             {
-                "QRType": "01",
-                "trace": "002266"
+                "amountValue": 1.01,
+                "QRType": "01"
             }
         }
     }
 
-    response = requestWithValidation("Create Sale", "post", url, data)
+
+    expected_response = {
+        "detail.QRType": "01",
+        "header.responseCode": "00",
+    }
+
+
+    response = requestWithValidation("Create Sale", "post", url, data, expected_response)
     
     print(json.dumps([response]))

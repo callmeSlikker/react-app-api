@@ -221,12 +221,10 @@ def settlement():
 @app.route("/inquiry", methods=["POST"])
 def inquiry():
     try:
-        # รับข้อมูลจาก frontend
         req_data = request.get_json()
         qr_type = req_data.get("qrType")
         invoice_trace = req_data.get("invoiceTraceNumber")
 
-        # เตรียมข้อมูลเพื่อส่งต่อไปยัง /createRequest
         edc_request_data = {
             "CATEGORY": "com.pax.payment.Inquiry",
             "parm": {
@@ -241,12 +239,45 @@ def inquiry():
             }
         }
 
-        # เรียก API ไปยัง backend EDC
         url = "http://localhost:9092/createRequest"
         response = requestWithValidation("Inquiry", "post", url, edc_request_data)
 
-        result = response.json()
-        return jsonify(result)
+        for key in ["error", "function", "success"]:
+            response.pop(key, None)
+
+        return jsonify(response)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/cancle", methods=["POST"])
+def cancle():
+    try:
+        req_data = request.get_json()
+        qr_type = req_data.get("qrType")
+        invoice_trace = req_data.get("invoiceTraceNumber")
+
+        edc_request_data = {
+            "CATEGORY": "com.pax.payment.CancelCommand",
+            "parm": {
+                "header": {
+                    "formatVersion": "1",
+                    "endPointNamespace": "com.pax.edc.bpsp"
+                },
+                "detail": {
+                    "QRType": qr_type,
+                    "invoiceTraceNumber": invoice_trace
+                }
+            }
+        }
+
+        url = "http://localhost:9092/createRequest"
+        response = requestWithValidation("cancle", "post", url, edc_request_data)
+
+        for key in ["error", "function", "success"]:
+            response.pop(key, None)
+
+        return jsonify(response)
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

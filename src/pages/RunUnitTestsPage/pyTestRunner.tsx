@@ -18,6 +18,9 @@ export default function PyTestRunner() {
   const [isPaused, setIsPaused] = useState(false);
   const isLoopingRef = useRef(false);
   const isPausedRef = useRef(false);
+  const [inquiryResponses, setInquiryResponses] = useState<Record<string, any>>({});
+  const [cancelResponses, setCancelResponses] = useState<Record<string, any>>({});
+
 
   useEffect(() => {
     const fetchUnitTestFiles = async () => {
@@ -94,7 +97,7 @@ export default function PyTestRunner() {
             marginBottom: 20,
             maxHeight: "50vh",
             overflowY: "auto",
-         }}>
+          }}>
             <FileTreeView fileTree={fileTree} selectedFiles={selectedFiles} toggleFile={toggleFile} />
           </div>
           <div style={{ marginTop: 20, marginBottom: 20 }}>
@@ -125,7 +128,11 @@ export default function PyTestRunner() {
             </button>
           </div>
 
-          <RunUnitTestsResultSection results={results} />
+          <RunUnitTestsResultSection
+            results={results}
+            inquiryResponses={inquiryResponses}
+            cancelResponses={cancelResponses}
+          />
         </div>
       </div>
       <div style={{

@@ -19,13 +19,15 @@ export interface UnitTestResult {
 
 interface RunUnitTestsResultProps {
   results: UnitTestResult[];
+  inquiryResponses: Record<string, any>;
+  cancelResponses: Record<string, any>;
 }
+
 
 export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
   const [visibleQR, setVisibleQR] = useState<Record<string, boolean>>({});
-  const [inquiryResponses, setInquiryResponses] = useState<Record<string, any>>(
-    {}
-  );
+  const [inquiryResponses, setInquiryResponses] = useState<Record<string, any>>({});
+  const [cancelResponses, setCancelResponses] = useState<Record<string, any>>({});
 
   const toggleQR = (key: string) => {
     setVisibleQR((prev) => ({
@@ -65,11 +67,43 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     }
   };
 
+  const handleCancle = async (
+    qrKey: string,
+    qrType: string,
+    invoiceTraceNumber: string
+  ) => {
+    try {
+      const res = await fetch("http://localhost:5001/cancle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          qrType,
+          invoiceTraceNumber,
+        }),
+      });
+
+      const data = await res.json();
+      setCancelResponses((prev) => ({
+        ...prev,
+        [qrKey]: data,
+      }));
+    } catch (err) {
+      console.error("Cancel failed", err);
+      setCancelResponses((prev) => ({
+        ...prev,
+        [qrKey]: { error: "Failed to fetch cancel" },
+      }));
+    }
+  };
+
+
   const downloadVerticalCSV = () => {
     let csvContent = "";
 
     results.forEach((test) => {
-      test.data.forEach((result) => {
+      test.data.forEach((result, index) => {
         const responseBody = result.response.body || {};
         const errorMap = (result.error || []).reduce((acc, err) => {
           const match = err.match(/Expect (.*?) to be/);
@@ -87,8 +121,9 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
           return acc;
         }, {} as Record<string, string>);
 
-        // Header per test case
-        csvContent += `[ ${test.fileName} - ${result.function} ]\n`;
+        const qrKey = `${test.fileName}-${result.function}-${index}`;
+
+        csvContent += `[ ${test.fileName} - ${result.function} - RequestQR ]\n`;
 
         Object.entries(responseBody).forEach(([sectionName, sectionData]) => {
           if (typeof sectionData === "object" && sectionData !== null) {
@@ -120,6 +155,53 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
           }
         });
 
+        const inquiry = inquiryResponses[qrKey];
+        if (inquiry?.response?.body) {
+          csvContent += `[ ${test.fileName} - ${result.function} - Inquiry ]\n`;
+
+          Object.entries(inquiry.response.body).forEach(
+            ([sectionName, sectionData]) => {
+              if (typeof sectionData === "object" && sectionData !== null) {
+                csvContent += `[ ${capitalize(sectionName)} ]\n`;
+                csvContent += `key,value\n`;
+
+                Object.entries(sectionData).forEach(([key, value]) => {
+                  const val =
+                    typeof value === "object" && value !== null
+                      ? `"${JSON.stringify(value)}"`
+                      : `="${String(value)}"`;
+                  csvContent += `${sectionName}.${key},${val}\n`;
+                });
+
+                csvContent += `\n`;
+              }
+            }
+          );
+        }
+
+        const cancel = cancelResponses[qrKey];
+        if (cancel?.response?.body) {
+          csvContent += `[ ${test.fileName} - ${result.function} - Cancel ]\n`;
+
+          Object.entries(cancel.response.body).forEach(
+            ([sectionName, sectionData]) => {
+              if (typeof sectionData === "object" && sectionData !== null) {
+                csvContent += `[ ${capitalize(sectionName)} ]\n`;
+                csvContent += `key,value\n`;
+
+                Object.entries(sectionData).forEach(([key, value]) => {
+                  const val =
+                    typeof value === "object" && value !== null
+                      ? `"${JSON.stringify(value)}"`
+                      : `="${String(value)}"`;
+                  csvContent += `${sectionName}.${key},${val}\n`;
+                });
+
+                csvContent += `\n`;
+              }
+            }
+          );
+        }
         csvContent += `\n`;
       });
     });
@@ -133,6 +215,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     link.click();
     document.body.removeChild(link);
   };
+
 
   const capitalize = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1);
@@ -268,9 +351,31 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                         border: "none",
                         borderRadius: 4,
                         cursor: "pointer",
+                        marginLeft: 10,
                       }}
                     >
                       Inquiry
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        handleCancle(
+                          qrKey,
+                          responseDetail?.QRType,
+                          responseDetail?.invoiceTraceNumber
+                        )
+                      }
+                      style={{
+                        padding: "6px 12px",
+                        backgroundColor: "#f97316",
+                        color: "white",
+                        border: "none",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                        marginLeft: 10,
+                      }}
+                    >
+                      Cancel
                     </button>
 
                     {visibleQR[qrKey] && (
@@ -278,6 +383,76 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                         <QRCode value={qrData} size={180} />
                       </div>
                     )}
+                  </div>
+                )}
+
+                {inquiryResponses[qrKey] && (
+                  <div style={{ marginTop: 10 }}>
+                    <strong>Inquiry Result:</strong>
+                    <div style={{ display: "flex", gap: 20, marginTop: 10 }}>
+                      <div style={{ flex: 1 }}>
+                        <strong style={{ fontSize: 14 }}>Request:</strong>
+                        <pre
+                          style={{
+                            padding: 10,
+                            borderRadius: 8,
+                            fontSize: 14,
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {JSON.stringify(inquiryResponses[qrKey]?.request, null, 2)}
+                        </pre>
+                      </div>
+
+                      <div style={{ flex: 1 }}>
+                        <strong style={{ fontSize: 14 }}>Response Body:</strong>
+                        <pre
+                          style={{
+                            padding: 10,
+                            borderRadius: 8,
+                            fontSize: 14,
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {JSON.stringify(inquiryResponses[qrKey]?.response?.body, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {cancelResponses[qrKey] && (
+                  <div style={{ marginTop: 10 }}>
+                    <strong>Cancel Result:</strong>
+                    <div style={{ display: "flex", gap: 20, marginTop: 10 }}>
+                      <div style={{ flex: 1 }}>
+                        <strong style={{ fontSize: 14 }}>Request:</strong>
+                        <pre
+                          style={{
+                            padding: 10,
+                            borderRadius: 8,
+                            fontSize: 14,
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {JSON.stringify(cancelResponses[qrKey]?.request, null, 2)}
+                        </pre>
+                      </div>
+
+                      <div style={{ flex: 1 }}>
+                        <strong style={{ fontSize: 14 }}>Response Body:</strong>
+                        <pre
+                          style={{
+                            padding: 10,
+                            borderRadius: 8,
+                            fontSize: 14,
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {JSON.stringify(cancelResponses[qrKey]?.response?.body, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
                   </div>
                 )}
 
