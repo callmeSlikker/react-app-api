@@ -20,6 +20,7 @@ export default function PyTestRunner() {
   const isPausedRef = useRef(false);
   const [inquiryResponses, setInquiryResponses] = useState<Record<string, any>>({});
   const [cancelResponses, setCancelResponses] = useState<Record<string, any>>({});
+  const [voidResponses, setVoidResponses] = useState<Record<string, any>>({});
 
 
   useEffect(() => {
@@ -132,6 +133,7 @@ export default function PyTestRunner() {
             results={results}
             inquiryResponses={inquiryResponses}
             cancelResponses={cancelResponses}
+            voidResponses={voidResponses}
           />
         </div>
       </div>

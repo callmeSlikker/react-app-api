@@ -21,6 +21,7 @@ interface RunUnitTestsResultProps {
   results: UnitTestResult[];
   inquiryResponses: Record<string, any>;
   cancelResponses: Record<string, any>;
+  voidResponses: Record<string, any>;
 }
 
 
@@ -28,6 +29,39 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
   const [visibleQR, setVisibleQR] = useState<Record<string, boolean>>({});
   const [inquiryResponses, setInquiryResponses] = useState<Record<string, any>>({});
   const [cancelResponses, setCancelResponses] = useState<Record<string, any>>({});
+  const [voidResponses, setVoidResponses] = useState<Record<string, any>>({});
+  const [caseKey, setCaseKey] = useState<string>("");
+
+  const handleVoid = async (caseKey: string, invoiceTraceNumber: string) => {
+    try {
+
+      if (!invoiceTraceNumber) {
+        console.warn("Missing invoiceTraceNumber for void.");
+        return;
+      }
+
+      const res = await fetch("http://localhost:5001/void", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ invoiceTraceNumber }),
+      });
+
+      const data = await res.json();
+
+      setVoidResponses((prev) => ({
+        ...prev,
+        [caseKey]: data,
+      }));
+    } catch (err) {
+      console.error("Void failed", err);
+      setVoidResponses((prev) => ({
+        ...prev,
+        [caseKey]: { error: "Failed to fetch void" },
+      }));
+    }
+  };
 
   const toggleQR = (key: string) => {
     setVisibleQR((prev) => ({
@@ -97,7 +131,6 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
       }));
     }
   };
-
 
   const downloadVerticalCSV = () => {
     let csvContent = "";
@@ -202,6 +235,29 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
             }
           );
         }
+
+        const voidRes = voidResponses[qrKey];
+        if (voidRes?.response?.body) {
+          csvContent += `[ ${test.fileName} - ${result.function} - Void ]\n`;
+
+          Object.entries(voidRes.response.body).forEach(([sectionName, sectionData]) => {
+            if (typeof sectionData === "object" && sectionData !== null) {
+              csvContent += `[ ${capitalize(sectionName)} ]\n`;
+              csvContent += `key,value\n`;
+
+              Object.entries(sectionData).forEach(([key, value]) => {
+                const val =
+                  typeof value === "object" && value !== null
+                    ? `"${JSON.stringify(value)}"`
+                    : `="${String(value)}"`;
+                csvContent += `${sectionName}.${key},${val}\n`;
+              });
+
+              csvContent += `\n`;
+            }
+          });
+        }
+
         csvContent += `\n`;
       });
     });
@@ -386,6 +442,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                   </div>
                 )}
 
+
                 {inquiryResponses[qrKey] && (
                   <div style={{ marginTop: 10 }}>
                     <strong>Inquiry Result:</strong>
@@ -454,6 +511,25 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                       </div>
                     </div>
                   </div>
+                )}
+
+                {responseDetail?.invoiceTraceNumber && (
+                  <button
+                    onClick={() =>
+                      handleVoid(caseKey, responseDetail?.invoiceTraceNumber)
+                    }
+                    style={{
+                      padding: "6px 12px",
+                      backgroundColor: "#a855f7", // สีม่วง
+                      color: "white",
+                      border: "none",
+                      borderRadius: 4,
+                      cursor: "pointer",
+                      marginLeft: 10,
+                    }}
+                  >
+                    Void
+                  </button>
                 )}
 
                 {hasErrors && (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export interface FileNodeType {
   name: string;
@@ -24,51 +24,52 @@ const FileNode: React.FC<FileNodeProps> = ({ node, toggle, path, selected }) => 
     return n.children?.flatMap(child => getAllChildFilePaths(child, `${base}/${n.name}`)) || [];
   };
 
-  const handleFolderCheckboxChange = () => {
+  const handleFolderCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
     const allFiles = getAllChildFilePaths(node, path);
     const isAllSelected = allFiles.every(f => selected.includes(f));
     if (isAllSelected) {
-      allFiles.forEach(f => toggle(f)); // unselect all
+      allFiles.forEach(f => toggle(f));
     } else {
       allFiles.forEach(f => {
-        if (!selected.includes(f)) toggle(f); // select only unselected
+        if (!selected.includes(f)) toggle(f);
       });
     }
   };
 
   const isFolderSelected = () => {
     const allFiles = getAllChildFilePaths(node, path);
-    return allFiles.every(f => selected.includes(f));
+    return allFiles.length > 0 && allFiles.every(f => selected.includes(f));
   };
 
   if (node.type === "folder") {
     return (
-      <>
-        <div style={{marginLeft: 20}}>
-          <label style={{ cursor: "pointer", fontWeight: "bold" }}>
-            <input
-              type="checkbox"
-              checked={isFolderSelected()}
-              onChange={handleFolderCheckboxChange}
-              style={{ marginRight: 5 }}
-            />
-            <span onClick={() => setOpen(!open)}>
-              {open ? "📂" : "📁"} {node.name}
-            </span>
-          </label>
-          {open &&
-            node.children?.map((child) => (
-              <FileNode
-                key={`${currentPath}/${child.name}`}
-                node={child}
-                toggle={toggle}
-                path={currentPath}
-                selected={selected}
-              />
-            ))}
+      <div style={{ marginLeft: 20, display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <input
+            type="checkbox"
+            checked={isFolderSelected()}
+            onChange={handleFolderCheckboxChange}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <span
+            style={{ cursor: "pointer", fontWeight: "bold", userSelect: "none" }}
+            onClick={() => setOpen(!open)}
+          >
+            {open ? "📂" : "📁"} {node.name}
+          </span>
         </div>
-      </>
-
+        {open &&
+          node.children?.map((child) => (
+            <FileNode
+              key={`${currentPath}/${child.name}`}
+              node={child}
+              toggle={toggle}
+              path={currentPath}
+              selected={selected}
+            />
+          ))}
+      </div>
     );
   }
 
@@ -85,7 +86,6 @@ const FileNode: React.FC<FileNodeProps> = ({ node, toggle, path, selected }) => 
     </div>
   );
 };
-
 
 export default function FileTreeView({
   fileTree,

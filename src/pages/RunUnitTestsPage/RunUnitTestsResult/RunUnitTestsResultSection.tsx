@@ -6,12 +6,14 @@ interface RunUnitTestsResultSectionProps {
   results: UnitTestResult[][];
   inquiryResponses: Record<string, any>;
   cancelResponses: Record<string, any>;
+  voidResponses: Record<string, any>;
 }
 
 export function RunUnitTestsResultSection({
   results,
   inquiryResponses,
   cancelResponses,
+  voidResponses,
 }: RunUnitTestsResultSectionProps) {
   return (
     <div
@@ -38,6 +40,7 @@ export function RunUnitTestsResultSection({
             results={eachLoopResults}
             inquiryResponses={inquiryResponses}
             cancelResponses={cancelResponses}
+            voidResponses={voidResponses}
           />
         </Fragment>
       ))}
