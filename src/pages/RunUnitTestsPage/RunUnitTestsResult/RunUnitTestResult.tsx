@@ -32,6 +32,14 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
   const [voidResponses, setVoidResponses] = useState<Record<string, any>>({});
   const [caseKey, setCaseKey] = useState<string>("");
 
+  const [expandedFiles, setExpandedFiles] = useState<Record<string, boolean>>({});
+
+  const toggleExpandFile = (fileName: string) => {
+    setExpandedFiles((prev) => ({
+      ...prev,
+      [fileName]: !prev[fileName],
+    }));
+  };
   const handleVoid = async (
     qrKey: string,
     invoiceTraceNumber: string
@@ -54,7 +62,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
 
       setVoidResponses((prev) => ({
         ...prev,
-        [qrKey]: data, // ✅ ใช้ qrKey ตรงกับหน้าจอแสดงผล
+        [qrKey]: data,
       }));
     } catch (err) {
       console.error("Void failed", err);
@@ -104,6 +112,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     }
   };
 
+
   const handleCancle = async (
     qrKey: string,
     qrType: string,
@@ -135,9 +144,29 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     }
   };
 
+
   const downloadVerticalCSV = () => {
     let csvContent = "";
 
+    // === Step 1: Create summaryContent first ===
+    let summaryContent = `=== Summary ===\n`;
+    summaryContent += `File Name,Result\n`;
+
+    results.forEach((test) => {
+      let hasError = false;
+
+      test.data.forEach((result) => {
+        if (result.error && result.error.length > 0) {
+          hasError = true;
+        }
+      });
+
+      summaryContent += `${test.fileName},${hasError ? "error" : "success"}\n`;
+    });
+
+    summaryContent += `\n`; // For spacing before detailed content
+
+    // === Step 2: Append detailed content to csvContent ===
     results.forEach((test) => {
       test.data.forEach((result, index) => {
         const responseBody = result.response.body || {};
@@ -168,10 +197,15 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
 
             Object.entries(sectionData).forEach(([key, value]) => {
               const fullKey = `${sectionName}.${key}`;
+
               const val =
                 typeof value === "object" && value !== null
                   ? `"${JSON.stringify(value)}"`
-                  : `="${String(value)}"`;
+                  : typeof value === "number"
+                    ? `'${value}`
+                    : /^\d+$/.test(value)
+                      ? `'${value}`
+                      : `${value}`;
 
               let status = "";
               let message = "";
@@ -195,48 +229,44 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
         if (inquiry?.response?.body) {
           csvContent += `[ ${test.fileName} - ${result.function} - Inquiry ]\n`;
 
-          Object.entries(inquiry.response.body).forEach(
-            ([sectionName, sectionData]) => {
-              if (typeof sectionData === "object" && sectionData !== null) {
-                csvContent += `[ ${capitalize(sectionName)} ]\n`;
-                csvContent += `key,value\n`;
+          Object.entries(inquiry.response.body).forEach(([sectionName, sectionData]) => {
+            if (typeof sectionData === "object" && sectionData !== null) {
+              csvContent += `[ ${capitalize(sectionName)} ]\n`;
+              csvContent += `key,value\n`;
 
-                Object.entries(sectionData).forEach(([key, value]) => {
-                  const val =
-                    typeof value === "object" && value !== null
-                      ? `"${JSON.stringify(value)}"`
-                      : `="${String(value)}"`;
-                  csvContent += `${sectionName}.${key},${val}\n`;
-                });
+              Object.entries(sectionData).forEach(([key, value]) => {
+                const val =
+                  typeof value === "object" && value !== null
+                    ? `"${JSON.stringify(value)}"`
+                    : `="${String(value)}"`;
+                csvContent += `${sectionName}.${key},${val}\n`;
+              });
 
-                csvContent += `\n`;
-              }
+              csvContent += `\n`;
             }
-          );
+          });
         }
 
         const cancel = cancelResponses[qrKey];
         if (cancel?.response?.body) {
           csvContent += `[ ${test.fileName} - ${result.function} - Cancel ]\n`;
 
-          Object.entries(cancel.response.body).forEach(
-            ([sectionName, sectionData]) => {
-              if (typeof sectionData === "object" && sectionData !== null) {
-                csvContent += `[ ${capitalize(sectionName)} ]\n`;
-                csvContent += `key,value\n`;
+          Object.entries(cancel.response.body).forEach(([sectionName, sectionData]) => {
+            if (typeof sectionData === "object" && sectionData !== null) {
+              csvContent += `[ ${capitalize(sectionName)} ]\n`;
+              csvContent += `key,value\n`;
 
-                Object.entries(sectionData).forEach(([key, value]) => {
-                  const val =
-                    typeof value === "object" && value !== null
-                      ? `"${JSON.stringify(value)}"`
-                      : `="${String(value)}"`;
-                  csvContent += `${sectionName}.${key},${val}\n`;
-                });
+              Object.entries(sectionData).forEach(([key, value]) => {
+                const val =
+                  typeof value === "object" && value !== null
+                    ? `"${JSON.stringify(value)}"`
+                    : `="${String(value)}"`;
+                csvContent += `${sectionName}.${key},${val}\n`;
+              });
 
-                csvContent += `\n`;
-              }
+              csvContent += `\n`;
             }
-          );
+          });
         }
 
         const voidRes = voidResponses[qrKey];
@@ -265,7 +295,10 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
       });
     });
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    // === Step 3: Combine summary and full content ===
+    const finalContent = summaryContent + csvContent;
+
+    const blob = new Blob([finalContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -337,7 +370,11 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                 key={j}
                 style={{
                   border: `2px solid ${hasErrors ? "red" : "green"}`,
-                  backgroundColor: "#ffffff",
+                  backgroundColor: hasErrors
+                    ? "#ffcfcf"   // สีแดงอ่อนเวลาผิด
+                    : hasSuccess
+                      ? "#e1fae5"   // สีเขียวอ่อนเวลาผ่าน
+                      : "#ffffff",  // สีขาวถ้าไม่มีทั้ง error และ success
                   borderRadius: 10,
                   padding: 15,
                   marginBottom: 15,
@@ -519,7 +556,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                 <button
                   onClick={() =>
                     handleVoid(
-                      qrKey, // ✅ ใช้ key นี้แทน caseKey
+                      qrKey,
                       responseDetail?.invoiceTraceNumber
                     )
                   }
@@ -571,7 +608,6 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                     </div>
                   </div>
                 )}
-
 
               </div>
             );
