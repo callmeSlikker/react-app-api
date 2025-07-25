@@ -32,9 +32,11 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
   const [voidResponses, setVoidResponses] = useState<Record<string, any>>({});
   const [caseKey, setCaseKey] = useState<string>("");
 
-  const handleVoid = async (caseKey: string, invoiceTraceNumber: string) => {
+  const handleVoid = async (
+    qrKey: string,
+    invoiceTraceNumber: string
+  ) => {
     try {
-
       if (!invoiceTraceNumber) {
         console.warn("Missing invoiceTraceNumber for void.");
         return;
@@ -52,16 +54,17 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
 
       setVoidResponses((prev) => ({
         ...prev,
-        [caseKey]: data,
+        [qrKey]: data, // ✅ ใช้ qrKey ตรงกับหน้าจอแสดงผล
       }));
     } catch (err) {
       console.error("Void failed", err);
       setVoidResponses((prev) => ({
         ...prev,
-        [caseKey]: { error: "Failed to fetch void" },
+        [qrKey]: { error: "Failed to fetch void" },
       }));
     }
   };
+
 
   const toggleQR = (key: string) => {
     setVisibleQR((prev) => ({
@@ -156,7 +159,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
 
         const qrKey = `${test.fileName}-${result.function}-${index}`;
 
-        csvContent += `[ ${test.fileName} - ${result.function} - RequestQR ]\n`;
+        csvContent += `[ ${test.fileName} - ${result.function} ]\n`;
 
         Object.entries(responseBody).forEach(([sectionName, sectionData]) => {
           if (typeof sectionData === "object" && sectionData !== null) {
@@ -513,45 +516,63 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                   </div>
                 )}
 
-                {responseDetail?.invoiceTraceNumber && (
-                  <button
-                    onClick={() =>
-                      handleVoid(caseKey, responseDetail?.invoiceTraceNumber)
-                    }
-                    style={{
-                      padding: "6px 12px",
-                      backgroundColor: "#a855f7", // สีม่วง
-                      color: "white",
-                      border: "none",
-                      borderRadius: 4,
-                      cursor: "pointer",
-                      marginLeft: 10,
-                    }}
-                  >
-                    Void
-                  </button>
+                <button
+                  onClick={() =>
+                    handleVoid(
+                      qrKey, // ✅ ใช้ key นี้แทน caseKey
+                      responseDetail?.invoiceTraceNumber
+                    )
+                  }
+                  style={{
+                    padding: "6px 12px",
+                    backgroundColor: "#a855f7",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 4,
+                    cursor: "pointer",
+                    marginLeft: 10,
+                  }}
+                >
+                  Void
+                </button>
+
+
+                {voidResponses[qrKey] && (
+                  <div style={{ marginTop: 10 }}>
+                    <strong>Void Result:</strong>
+                    <div style={{ display: "flex", gap: 20, marginTop: 10 }}>
+                      <div style={{ flex: 1 }}>
+                        <strong style={{ fontSize: 14 }}>Request:</strong>
+                        <pre
+                          style={{
+                            padding: 10,
+                            borderRadius: 8,
+                            fontSize: 14,
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {JSON.stringify(voidResponses[qrKey]?.request, null, 2)}
+                        </pre>
+                      </div>
+
+                      <div style={{ flex: 1 }}>
+                        <strong style={{ fontSize: 14 }}>Response Body:</strong>
+                        <pre
+                          style={{
+                            padding: 10,
+                            borderRadius: 8,
+                            fontSize: 14,
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {JSON.stringify(voidResponses[qrKey]?.response?.body, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
+                  </div>
                 )}
 
-                {hasErrors && (
-                  <div style={{ fontSize: 14 }}>
-                    <strong style={{ color: "#dc2626" }}>Errors:</strong>
-                    <ul style={{ color: "#b91c1c", paddingLeft: 20 }}>
-                      {result?.error?.map((err, k) => (
-                        <li key={k}>{err}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {hasSuccess && (
-                  <div style={{ fontSize: 14 }}>
-                    <strong style={{ color: "#4ade80" }}>Success:</strong>
-                    <ul style={{ color: "#4ade80", paddingLeft: 20 }}>
-                      {result?.success?.map((err, k) => (
-                        <li key={k}>{err}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+
               </div>
             );
           })}
