@@ -322,7 +322,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
 
     const cloned = JSON.parse(JSON.stringify(body));
     if (cloned?.detail?.balanceAmount) {
-      cloned.detail.balanceAmount = cloned.detail.balanceAmoun.toFixed(2);
+      cloned.detail.balanceAmount = cloned.detail.balanceAmount.toFixed(2);
     }
     return cloned;
   };
