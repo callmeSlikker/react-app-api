@@ -1,77 +1,51 @@
 import axios from "axios";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { ConnectDeviceToWifiSection } from "./ConnectDevice/ConnectDeviceToWifiSection.tsx";
 import { ConnectDeviceToCloudSection } from "./ConnectDevice/ConnectDeviceToCloudSection.tsx";
 import { RunUnitTestsResultSection } from "./RunUnitTestsResult/RunUnitTestsResultSection.tsx";
 import { UnitTestResult } from "./RunUnitTestsResult/RunUnitTestResult.tsx";
-import FileTreeView, { FileNodeType } from "./FileTest/FileTreeView.tsx";
+import FileTreeView from "./FileTest/FileTreeView.tsx";
 import { Settlement } from "./Settlement/Settlement.tsx";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 export default function PyTestRunner() {
-  const [fileTree, setFileTree] = useState<FileNodeType[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
-
   const [results, setResults] = useState<UnitTestResult[][]>([]);
-  const [loading, setLoading] = useState(false);
   const [loopCount, setLoopCount] = useState(1);
-  const [isLooping, setIsLooping] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const isLoopingRef = useRef(false);
-  const isPausedRef = useRef(false);
   const [inquiryResponses, setInquiryResponses] = useState<Record<string, any>>({});
   const [cancelResponses, setCancelResponses] = useState<Record<string, any>>({});
   const [voidResponses, setVoidResponses] = useState<Record<string, any>>({});
-
-
-  useEffect(() => {
-    const fetchUnitTestFiles = async () => {
-      const data = await axios.get("http://localhost:5001/list-files").then((res) => res.data);
-      setFileTree(data);
-    };
-    fetchUnitTestFiles();
-  },
-    []);
 
   const reset = () => {
     setSelectedFiles([]);
   };
 
-  const runTests = async () => {
-    if (selectedFiles.length === 0 || loopCount <= 0) return;
+  const {
+    data: fileTree = [],
+    isLoading: isFileTreeLoading,
+  } = useQuery({
+    queryKey: ["unitTestFiles"],
+    queryFn: async () => {
+      const res = await axios.get("http://localhost:5001/list-files");
+      return res.data;
+    },
+  });
 
-    setLoading(true);
-    try {
-      console.log("selectedFiles", selectedFiles)
-      const data = await axios.post("http://localhost:5001/start-tests", {
+  const runTestsMutation = useMutation({
+    mutationFn: async () => {
+      const response = await axios.post("http://localhost:5001/start-tests", {
         files: selectedFiles,
         loopCount: loopCount,
-      }).then((res) => res.data);
-
-      console.log("data", data)
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
       setResults(data);
-    } catch (e) {
-      alert("Error running tests: " + e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // const pauseLoop = () => {
-  //   isPausedRef.current = true;
-  //   setIsPaused(true);
-  // };
-
-  // const resumeLoop = () => {
-  //   isPausedRef.current = false;
-  //   setIsPaused(false);
-  // };
-
-  // const stopLoop = () => {
-  //   isLoopingRef.current = false;
-  //   isPausedRef.current = false;
-  //   setIsLooping(false);
-  //   setIsPaused(false);
-  // };
+    },
+    onError: (error: any) => {
+      alert("Error running tests: " + error.message);
+    },
+  });
 
   const toggleFile = (filePath: string) => {
     setSelectedFiles((prev) =>
@@ -80,6 +54,8 @@ export default function PyTestRunner() {
         : [...prev, filePath]
     );
   };
+
+  const isRunningTets = runTestsMutation.isPending || isFileTreeLoading;
 
   return (
     <div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
@@ -134,9 +110,11 @@ export default function PyTestRunner() {
             inquiryResponses={inquiryResponses}
             cancelResponses={cancelResponses}
             voidResponses={voidResponses}
+            isRunningTets={isRunningTets}
           />
         </div>
       </div>
+
       <div style={{
         background: "#fff",
         borderTop: "1px solid #ccc",
@@ -159,47 +137,19 @@ export default function PyTestRunner() {
             onChange={(e) => setLoopCount(Number(e.target.value))}
           />
         </div>
+        
         <div>
-          {/* ▶ Start */}
           <button
-            onClick={runTests}
-            disabled={isLooping}
+            onClick={() => runTestsMutation.mutate()}
+            disabled={isRunningTets}
             style={{ margin: 5, borderBlockColor: "black", background: "none" }}
           >
             Start
           </button>
 
-          {/* ⏸ Pause
-            <button
-              onClick={pauseLoop}
-              disabled={!isLooping || isPaused}
-              style={{ margin: 5, border: "none", background: "none" }}
-            >
-              ⏸
-            </button> */}
-
-          {/* ⏺ Resume
-            <button
-              onClick={resumeLoop}
-              disabled={!isPaused}
-              style={{ margin: 5, border: "none", background: "none" }}
-            >
-              ⏺
-            </button> */}
-
-          {/* ⏹ Stop
-            <button
-              onClick={stopLoop}
-              disabled={!isLooping}
-              style={{ margin: 5, border: "none", background: "none" }}
-            >
-              ⏹
-            </button> */}
-
-          {/* Reset ปิด loop */}
           <button
             onClick={reset}
-            disabled={loading}
+            disabled={isRunningTets}
             style={{ margin: 5, borderBlockColor: "black", background: "none" }}
           >
             Reset
