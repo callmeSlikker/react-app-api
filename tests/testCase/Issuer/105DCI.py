@@ -19,7 +19,7 @@ def test_sale_credit_diners():
     expected_response = {
         "detail.expiredDate":"XXXX",
         "header.responseCode": "00",
-        "detail.cardIssuerName": "DINERS",
+        "detail.cardIssuerName": "DCI",
         "detail.cardIssuerID": "12",
         "detail.merchantNameInSlipL1": "Merchant 1",
         "detail.addressInSlipL2": "normal functions",

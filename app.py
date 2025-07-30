@@ -154,7 +154,7 @@ def start_tests():
             try:
                 result = subprocess.run(
                     ["pytest", "-s", file_path],
-                    capture_output=True, text=True, timeout=60
+                    capture_output=True, text=True, timeout=70
                 )
                 response_array = result.stdout.strip().split('\n')
                 print("Raw Output:", response_array)

@@ -230,6 +230,13 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
           }
         });
 
+        const formatCSVValue = (value: any): string => {
+          if (typeof value === "object" && value !== null) {
+            return `"${JSON.stringify(value)}"`; // keep object in JSON format
+          }
+          return `'${String(value)}`; // prefix with ' to preserve leading zero
+        };
+
         const inquiry = inquiryResponses[qrKey];
         if (inquiry?.response?.body) {
           csvContent += `[ ${test.fileName} - ${result.function} - Inquiry ]\n`;
@@ -240,10 +247,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
               csvContent += `key,value\n`;
 
               Object.entries(sectionData).forEach(([key, value]) => {
-                const val =
-                  typeof value === "object" && value !== null
-                    ? `"${JSON.stringify(value)}"`
-                    : `="${String(value)}"`;
+                const val = formatCSVValue(value);
                 csvContent += `${sectionName}.${key},${val}\n`;
               });
 
@@ -252,6 +256,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
           });
         }
 
+        // === Cancel Section ===
         const cancel = cancelResponses[qrKey];
         if (cancel?.response?.body) {
           csvContent += `[ ${test.fileName} - ${result.function} - Cancel ]\n`;
@@ -262,10 +267,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
               csvContent += `key,value\n`;
 
               Object.entries(sectionData).forEach(([key, value]) => {
-                const val =
-                  typeof value === "object" && value !== null
-                    ? `"${JSON.stringify(value)}"`
-                    : `="${String(value)}"`;
+                const val = formatCSVValue(value);
                 csvContent += `${sectionName}.${key},${val}\n`;
               });
 
@@ -274,6 +276,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
           });
         }
 
+        // === Void Section ===
         const voidRes = voidResponses[qrKey];
         if (voidRes?.response?.body) {
           csvContent += `[ ${test.fileName} - ${result.function} - Void ]\n`;
@@ -284,10 +287,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
               csvContent += `key,value\n`;
 
               Object.entries(sectionData).forEach(([key, value]) => {
-                const val =
-                  typeof value === "object" && value !== null
-                    ? `"${JSON.stringify(value)}"`
-                    : `="${String(value)}"`;
+                const val = formatCSVValue(value);
                 csvContent += `${sectionName}.${key},${val}\n`;
               });
 
