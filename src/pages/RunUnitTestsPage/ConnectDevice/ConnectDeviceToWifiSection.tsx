@@ -10,7 +10,7 @@ export function ConnectDeviceToWifiSection() {
 
   const connectToDevice = async () => {
     try {
-      const res = await axios.post("https://react-app-api-be.vercel.app/connect-wifi", { host, port });
+      const res = await axios.post("http://localhost:9092/connectDeviceByWifi", { host, port });
       const data = res.data;
 
       if (res.status === 200 && data.resultCode === "200" && data.message === "connect success") {

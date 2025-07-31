@@ -33,7 +33,7 @@ export default function PyTestRunner() {
 
   const runTestsMutation = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("https://react-app-api-be.vercel.app/start-tests", {
+      const response = await axios.post("http://localhost:5001/start-tests", {
         files: selectedFiles,
         loopCount: loopCount,
       });
