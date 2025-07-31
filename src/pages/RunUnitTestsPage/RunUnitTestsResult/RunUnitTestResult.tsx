@@ -55,7 +55,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
         return;
       }
 
-      const res = await fetch("http://localhost:5001/void", {
+      const res = await fetch("https://react-app-api-be.vercel.app/void", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     invoiceTraceNumber: string
   ) => {
     try {
-      const res = await fetch("http://localhost:5001/inquiry", {
+      const res = await fetch("https://react-app-api-be.vercel.app/inquiry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     invoiceTraceNumber: string
   ) => {
     try {
-      const res = await fetch("http://localhost:5001/cancle", {
+      const res = await fetch("https://react-app-api-be.vercel.app/cancle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
