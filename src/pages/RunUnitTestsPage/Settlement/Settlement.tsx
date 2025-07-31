@@ -5,7 +5,7 @@ export function Settlement() {
 
     const requestSettlement = async () => {
         try {
-            const res = await axios.post("http://127.0.0.1:5001/settlement");
+            const res = await axios.post("https://react-app-api-be.vercel.app/settlement");
             const data = res.data;
 
             if (res.status === 200 && data.resultCode === "200" && data.message === "connect success") {
