@@ -26,14 +26,14 @@ export default function PyTestRunner() {
   } = useQuery({
     queryKey: ["unitTestFiles"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5001/list-files");
+      const res = await axios.get("https://react-app-api-be.vercel.app/list-files");
       return res.data;
     },
   });
 
   const runTestsMutation = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("http://localhost:5001/start-tests", {
+      const response = await axios.post("https://react-app-api-be.vercel.app/start-tests", {
         files: selectedFiles,
         loopCount: loopCount,
       });
