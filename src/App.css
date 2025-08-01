@@ -54,3 +54,42 @@ body {
     transform: rotate(360deg);
   }
 }
+
+body {
+  font-family: 'Outfit', sans-serif;
+}
+
+.title-bitcount {
+  font-family: 'Bitcount Prop Single', sans-serif;
+  color: #e67e22;
+}
+
+.title-playfair {
+  font-family: 'Playfair Display', serif;
+  color: #95eaff;
+}
+
+.video-background {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.video-background video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  padding-top: 30vh;
+}

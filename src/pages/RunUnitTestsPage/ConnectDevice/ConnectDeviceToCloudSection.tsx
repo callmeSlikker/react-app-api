@@ -1,100 +1,138 @@
-
 import axios from "axios";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
 export function ConnectDeviceToCloudSection() {
-  const [isOpen, setIsOpen] = useState(false);
   const [code, setHost] = useState("00000");
   const [eid, setPort] = useState(9000041);
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [connectFailed, setConnectFailed] = useState(false); // เพิ่ม state
 
   const connectToDevice = async () => {
     try {
-      const res = await axios.post("http://localhost:9092/connectDeviceByCloud", { code, eid});
+      const res = await axios.post("http://localhost:9092/connectDeviceByCloud", { code, eid });
       const data = res.data;
 
       if (res.status === 200 && data.resultCode === "200" && data.message === "connect success") {
+        setConnectFailed(false); // เชื่อมต่อสำเร็จ
         Swal.fire("Connected", "Device connected successfully", "success");
-        setStatus("success");     
-        setIsOpen(false);          
+        // 👉 ที่นี่ถ้าต้องการ redirect ไปหน้าอื่นให้ใช้ navigate("/pyTestRunner")
       } else {
+        setConnectFailed(true); // เชื่อมต่อไม่สำเร็จ
         Swal.fire("Failed", "Connect error", "error");
-        setStatus("error");       
       }
     } catch (error) {
+      setConnectFailed(true); // error ขณะเชื่อมต่อ
       Swal.fire("Error", "Unable to connect", "error");
-      setStatus("error");        
     }
   };
 
-  const getStatusIcon = () => {
-    if (status === "success") return "🟢";
-    if (status === "error") return "🔴";
-    return "⌛";
-  };
-
   return (
-    <div style={{ position: "relative", width: 300 }}>
-      {/* Clickable Text */}
-      <div
-        onClick={() => setIsOpen(!isOpen)}
-        style={{ fontFamily: "revert-layer", fontSize: 20, fontWeight: 1000, cursor: "pointer" }}
-      >
-        Cloud Connect {getStatusIcon()}
+    <div style={{ position: "relative", width: 300, fontFamily: "revert-layer" }}>
+      <div style={{
+        fontSize: 30,
+        fontWeight: 400,
+        marginBottom: 10,
+        cursor: "default",
+        color: "white",
+        fontFamily: "inherit",
+        textAlign: "center",
+      }}>
+        Cloud Connect
       </div>
 
-      {/* Dropdown Form */}
-      {isOpen && (
-        <div
-          style={{
-            marginTop: 10,
-            padding: 12,
-            border: "1px solid #d1d5db",
-            borderRadius: 6,
-            background: "#f9fafb",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          }}
-        >
-          <div style={{ display: "flex", marginBottom: 5 }}>
-            <div style={{ width: "25%" }}>
-              <label style={{ fontWeight: 600, marginRight: 10 }}>code :</label>
-            </div>
-            <input
-              value={code}
-              onChange={(e) => setHost(e.target.value)}
-              style={{ width: "70%", fontFamily: "revert-layer" }}
-            />
-          </div>
-          <div style={{ display: "flex", marginBottom: 5 }}>
-            <div style={{ width: "25%" }}>
-              <label style={{ fontWeight: 600, marginRight: 10 }}>eid :</label>
-            </div>
-            <input
-              type="number"
-              value={eid}
-              onChange={(e) => setPort(Number(e.target.value))}
-              style={{ width: "70%", fontFamily: "revert-layer" }}
-            />
-          </div>
-          <button
-            onClick={connectToDevice}
+      <div
+        style={{
+          marginTop: 10,
+          padding: 12,
+          border: "1px solid #d1d5db",
+          borderRadius: 10,
+          background: "#f9fafb",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 1)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "20px",
+        }}
+      >
+        <div>
+          <label style={{
+            fontSize: 24,
+            fontWeight: 200,
+            cursor: "default",
+            color: "black",
+            fontFamily: "inherit",
+            textAlign: "center",
+          }}>
+            code
+          </label>
+          <input
+            value={code}
+            onChange={(e) => setHost(e.target.value)}
             style={{
               width: "100%",
-              marginTop: 10,
-              padding: 6,
-              background: "#4ade80",
-              color: "black",
-              border: "none",
+              marginTop: 4,
+              padding: "8px 10px",
+              fontSize: 16,
+              fontFamily: "inherit",
+              fontWeight: 100,
+              boxSizing: "border-box",
               borderRadius: 4,
-              cursor: "pointer",
-              fontWeight: 600,
+              border: "1px solid #ccc",
+              textAlign: "center",
             }}
-          >
-            Connect to Device
-          </button>
+          />
         </div>
-      )}
+
+        <div>
+          <label style={{
+            fontSize: 24,
+            fontWeight: 200,
+            cursor: "default",
+            color: "black",
+            fontFamily: "inherit",
+            textAlign: "center",
+          }}>
+            eid
+          </label>
+          <input
+            type="number"
+            value={eid}
+            onChange={(e) => setPort(Number(e.target.value))}
+            style={{
+              width: "100%",
+              marginTop: 4,
+              padding: "8px 10px",
+              fontSize: 16,
+              fontFamily: "inherit",
+              fontWeight: 100,
+              boxSizing: "border-box",
+              borderRadius: 4,
+              border: "1px solid #ccc",
+              textAlign: "center",
+            }}
+          />
+        </div>
+
+        <button
+          onClick={connectToDevice}
+          style={{
+            width: "100%",
+            padding: 10,
+            background: connectFailed ? "#dc2626" : "#d3d7d8ff", // สีแดงถ้าล้มเหลว
+            color: connectFailed ? "white" : "black",
+            border: "none",
+            borderRadius: 4,
+            cursor: "pointer",
+            fontSize: 14,
+            fontFamily: "inherit",
+            fontWeight: 200,
+            transition: "background 0.3s ease",
+          }}
+        >
+          Connect to Device
+        </button>
+      </div>
     </div>
   );
 }
