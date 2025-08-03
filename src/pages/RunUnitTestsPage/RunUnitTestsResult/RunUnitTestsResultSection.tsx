@@ -1,20 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { RunUnitTestResult, UnitTestResult } from "./RunUnitTestResult.tsx";
-import LoadingIndicator from "../../../common/LoadingIndicator.tsx";
+import { RunUnitTestResult, UnitTestResult } from "./RunUnitTestResult";
+import LoadingIndicator from "../../../common/LoadingIndicator";
 
 interface RunUnitTestsResultSectionProps {
   results: UnitTestResult[][];
-  inquiryResponses: Record<string, any>;
-  cancelResponses: Record<string, any>;
-  voidResponses: Record<string, any>;
   isRunningTets: boolean;
 }
 
 export function RunUnitTestsResultSection({
   results,
-  inquiryResponses,
-  cancelResponses,
-  voidResponses,
   isRunningTets,
 }: RunUnitTestsResultSectionProps) {
   const [openLoops, setOpenLoops] = useState<Record<number, boolean>>({});
@@ -68,9 +62,6 @@ export function RunUnitTestsResultSection({
               {openLoops[index] && (
                 <RunUnitTestResult
                   results={eachLoopResults}
-                  inquiryResponses={inquiryResponses}
-                  cancelResponses={cancelResponses}
-                  voidResponses={voidResponses}
                 />
               )}
             </Fragment>

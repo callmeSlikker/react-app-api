@@ -1,45 +1,72 @@
 import React, { useState } from "react";
+import { SelectedFile } from "../pyTestRunner";
 
-export interface FileNodeType {
+export interface FileNodeFile {
   name: string;
-  type: "file" | "folder";
-  children?: FileNodeType[];
+  type: "file";
+  function: (fileName: string) => Promise<any>;
 }
+
+export interface FileNodeFolder {
+  name: string;
+  type: "folder";
+  children: (FileNodeFile | FileNodeFolder)[];
+}
+
+export type FileNodeType = FileNodeFile | FileNodeFolder;
 
 interface FileNodeProps {
   node: FileNodeType;
-  toggle: (filePath: string) => void;
-  path: string;
-  selected: string[];
+  toggle: (fileNode: FileNodeFile) => void;
+  selected: SelectedFile[];
+  currentPath: string;
 }
 
-const FileNode: React.FC<FileNodeProps> = ({ node, toggle, path, selected }) => {
+const FileNode: React.FC<FileNodeProps> = ({
+  node,
+  toggle,
+  selected,
+  currentPath,
+}) => {
   const [open, setOpen] = useState(false);
-  const currentPath = `${path}/${node.name}`;
+  const fullPath = `${currentPath}/${node.name}`;
 
-  const getAllChildFilePaths = (n: FileNodeType, base: string): string[] => {
+  const getAllChildFileNodes = (n: FileNodeType): FileNodeFile[] => {
     if (n.type === "file") {
-      return [`${base}/${n.name}`];
+      return [
+        {
+          name: n.name,
+          type: "file",
+          function: (n as any).function,
+        },
+      ];
     }
-    return n.children?.flatMap(child => getAllChildFilePaths(child, `${base}/${n.name}`)) || [];
+
+    return n.children?.flatMap((child) => getAllChildFileNodes(child)) || [];
+  };
+  const isFolderFullySelected = () => {
+    const allFiles = getAllChildFileNodes(node);
+    return allFiles.every((f) => selected.some((s) => s.fileName === f.name));
   };
 
-  const handleFolderCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFolderCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     e.stopPropagation();
-    const allFiles = getAllChildFilePaths(node, path);
-    const isAllSelected = allFiles.every(f => selected.includes(f));
-    if (isAllSelected) {
-      allFiles.forEach(f => toggle(f));
-    } else {
-      allFiles.forEach(f => {
-        if (!selected.includes(f)) toggle(f);
-      });
-    }
-  };
+    const allFiles = getAllChildFileNodes(node); // no path
 
-  const isFolderSelected = () => {
-    const allFiles = getAllChildFilePaths(node, path);
-    return allFiles.length > 0 && allFiles.every(f => selected.includes(f));
+    const isSelected = (f: FileNodeFile) =>
+      selected.some((s) => s.fileName === f.name);
+
+    const allSelected = allFiles.every(isSelected);
+
+    allFiles.forEach((f) => {
+      if (allSelected) {
+        toggle(f); // deselect
+      } else if (!isSelected(f)) {
+        toggle(f); // select
+      }
+    });
   };
 
   if (node.type === "folder") {
@@ -48,25 +75,29 @@ const FileNode: React.FC<FileNodeProps> = ({ node, toggle, path, selected }) => 
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <input
             type="checkbox"
-            checked={isFolderSelected()}
+            checked={isFolderFullySelected()}
             onChange={handleFolderCheckboxChange}
             onClick={(e) => e.stopPropagation()}
           />
           <span
-            style={{ cursor: "pointer", fontWeight: "bold", userSelect: "none" }}
+            style={{
+              cursor: "pointer",
+              fontWeight: "bold",
+              userSelect: "none",
+            }}
             onClick={() => setOpen(!open)}
           >
             {open ? "📂" : "📁"} {node.name}
           </span>
         </div>
         {open &&
-          node.children?.map((child) => (
+          node.children.map((child) => (
             <FileNode
-              key={`${currentPath}/${child.name}`}
+              key={`${fullPath}/${child.name}`}
               node={child}
               toggle={toggle}
-              path={currentPath}
               selected={selected}
+              currentPath={fullPath}
             />
           ))}
       </div>
@@ -78,8 +109,8 @@ const FileNode: React.FC<FileNodeProps> = ({ node, toggle, path, selected }) => 
       <label>
         <input
           type="checkbox"
-          checked={selected.includes(currentPath)}
-          onChange={() => toggle(currentPath)}
+          checked={selected.some((s) => s.fileName === node.name)}
+          onChange={() => toggle(node)}
         />
         {node.name}
       </label>
@@ -93,8 +124,8 @@ export default function FileTreeView({
   toggleFile,
 }: {
   fileTree: FileNodeType[];
-  selectedFiles: string[];
-  toggleFile: (filePath: string) => void;
+  selectedFiles: SelectedFile[];
+  toggleFile: (fileNode: FileNodeFile) => void;
 }) {
   return (
     <div>
@@ -106,8 +137,8 @@ export default function FileTreeView({
             key={node.name}
             node={node}
             toggle={toggleFile}
-            path=""
             selected={selectedFiles}
+            currentPath=""
           />
         ))
       )}
