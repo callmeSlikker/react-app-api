@@ -32,7 +32,7 @@ export function RunUnitTestsResultSection({
     <div
       style={{
         overflowY: "auto",
-        maxHeight: "75vh",
+        maxHeight: "100vh",
         paddingBottom: 10,
         paddingLeft: 20,
       }}
