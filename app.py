@@ -5,7 +5,6 @@ import subprocess
 import json
 import requests
 import time
-from tests.common.request import requestWithValidation
 
 app = Flask(__name__)
 CORS(app)
@@ -14,32 +13,6 @@ BASE_DIR = os.path.join(os.path.dirname(__file__), "tests", "testCase")
 HEADERS = {"Content-Type": "application/json"}
   
 
-def list_directory(path):
-    items = []
-    for entry in os.scandir(path):
-        if entry.name.startswith("__"):
-            continue
-
-        if entry.is_dir():
-            items.append({
-                "name": entry.name,
-                "type": "folder",
-                "children": list_directory(os.path.join(path, entry.name))
-            })
-        elif entry.is_file() and entry.name.endswith(".py"):
-            items.append({
-                "name": entry.name,
-                "type": "file"
-            })
-    return items
-
-@app.route("/list-files", methods=["GET"])
-def get_files():
-    try:
-        file_tree = list_directory(BASE_DIR)
-        return jsonify(file_tree)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 @app.route("/start-tests", methods=["POST", "OPTIONS"])
 def start_tests():
@@ -95,44 +68,6 @@ def start_tests():
     return jsonify(pytest_results)
 
 
-@app.route("/settlement", methods=["POST"])
-def settlement():
-    url = "http://localhost:9092/createRequest"
-    data = {
-        "CATEGORY": "com.pax.payment.Settlement",
-        "parm": {
-            "isAllAcquirer": True,
-            "acquirerNameList": ["acquirer0"]
-        }
-    }
-    try:
-        response = requestWithValidation("Create Settlement", "post", url, data)
-
-        data = response.json()
-        success = (
-
-            response.status_code == 200 and
-            data.get("resultCode") == "200" and
-            data.get("message") == "settlement success"
-        )
-        if success:
-            result = {
-                "resultCode": "200",
-                "message": "settlement success"
-            }
-        else:
-            result = {
-                "resultCode": "-111",
-                "message": "settlement error"
-            }
-
-    except Exception:
-        result = {
-            "resultCode": "-111",
-            "message": "settlement error"
-        }
-
-    return jsonify(result)
 
 @app.route("/inquiry", methods=["POST"])
 def inquiry():
@@ -198,35 +133,35 @@ def cancle():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route("/void", methods=["POST"])
-def void():
-    try:
-        req_data = request.get_json()
-        invoice_trace = req_data.get("invoiceTraceNumber")
+# @app.route("/void", methods=["POST"])
+# def void():
+#     try:
+#         req_data = request.get_json()
+#         invoice_trace = req_data.get("invoiceTraceNumber")
 
-        edc_request_data = {
-            "CATEGORY": "com.pax.payment.Void",
-            "parm": {
-                "header": {
-                    "formatVersion": "1",
-                    "endPointNamespace": "com.pax.edc.bpsp"
-                },
-                "detail": {
-                    "invoiceTraceNumber": invoice_trace
-                }
-            }
-        }
+#         edc_request_data = {
+#             "CATEGORY": "com.pax.payment.Void",
+#             "parm": {
+#                 "header": {
+#                     "formatVersion": "1",
+#                     "endPointNamespace": "com.pax.edc.bpsp"
+#                 },
+#                 "detail": {
+#                     "invoiceTraceNumber": invoice_trace
+#                 }
+#             }
+#         }
 
-        url = "http://localhost:9092/createRequest"
-        response = requestWithValidation("void", "post", url, edc_request_data)
+#         url = "http://localhost:9092/createRequest"
+#         response = requestWithValidation("void", "post", url, edc_request_data)
 
-        for key in ["error", "function", "success"]:
-            response.pop(key, None)
+#         for key in ["error", "function", "success"]:
+#             response.pop(key, None)
 
-        return jsonify(response)
+#         return jsonify(response)
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

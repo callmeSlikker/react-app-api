@@ -1,11 +1,8 @@
 import axios from "axios";
 import { useState, useRef } from "react";
-import { ConnectDeviceToWifiSection } from "./ConnectDevice/ConnectDeviceToWifiSection";
-import { ConnectDeviceToCloudSection } from "./ConnectDevice/ConnectDeviceToCloudSection";
 import { RunUnitTestsResultSection } from "./RunUnitTestsResult/RunUnitTestsResultSection";
 import { UnitTestResult } from "./RunUnitTestsResult/RunUnitTestResult";
 import FileTreeView from "./FileTest/FileTreeView";
-import { Settlement } from "./Settlement/Settlement";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { FileNodeFile, TEST_FILES } from "../../tests/test";
 import { RequestWithValidationResult } from "../../tests/requestWithValidation";
@@ -82,12 +79,6 @@ export default function PyTestRunner() {
           }}
         >
           <div>
-            <div style={{ marginBottom: 10 }}>
-              <ConnectDeviceToCloudSection />
-            </div>
-            <div style={{ marginBottom: 25 }}>
-              <ConnectDeviceToWifiSection />
-            </div>
             <div>
               <p
                 style={{
@@ -126,9 +117,6 @@ export default function PyTestRunner() {
               toggleFile={toggleFile}
             />
           </div>
-          <div style={{ marginTop: 20, marginBottom: 20 }}>
-            <Settlement />
-          </div>
         </div>
 
         <div
@@ -147,11 +135,11 @@ export default function PyTestRunner() {
               marginBottom: 5,
             }}
           >
-            <p
+            <p className="title"
               style={{
+                fontSize: 20, 
+                fontWeight: 500 ,
                 fontFamily: "revert-layer",
-                fontSize: 20,
-                fontWeight: 1000,
                 marginBottom: 10,
                 width: "25%",
               }}

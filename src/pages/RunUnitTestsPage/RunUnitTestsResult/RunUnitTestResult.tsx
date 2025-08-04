@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import QRCode from "react-qr-code";
 import { RequestWithValidationResult } from "../../../tests/requestWithValidation";
+import { voidRequest } from "../../../buttons/voidRequest";
+import { inquiryRequest } from "../../../buttons/inquityRequest";
+import { cancelRequest } from "../../../buttons/cancelRequest";
 
 export interface UnitTestResult {
   fileName: string;
@@ -44,28 +47,35 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
         return;
       }
 
-      const res = await fetch("http://localhost:5001/void", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ invoiceTraceNumber }),
-      });
-
-      const data = await res.json();
+      const result = await voidRequest(invoiceTraceNumber);
 
       setVoidResponses((prev) => ({
         ...prev,
-        [qrKey]: data,
+        [qrKey]: result,
       }));
-    } catch (err) {
-      console.error("Void failed", err);
+    } catch (error) {
+      console.error("Void failed", error);
       setVoidResponses((prev) => ({
         ...prev,
-        [qrKey]: { error: "Failed to fetch void" },
+        [qrKey]: {
+          response: { body: { error: "Void request failed" } },
+          request: {
+            CATEGORY: "com.pax.payment.Void",
+            parm: {
+              header: {
+                formatVersion: "1",
+                endPointNamespace: "com.pax.edc.bpsp",
+              },
+              detail: {
+                invoiceTraceNumber,
+              },
+            },
+          },
+        },
       }));
     }
   };
+
 
   const toggleQR = (key: string) => {
     setVisibleQR((prev) => ({
@@ -74,61 +84,96 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     }));
   };
 
-  const handleInquiry = async (
-    qrKey: string,
-    qrType: string,
-    invoiceTraceNumber: string
-  ) => {
+  const handleInquiry = async (qrKey: string, qrType: string, invoiceTraceNumber: string) => {
     try {
-      const res = await fetch("http://localhost:5001/inquiry", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          qrType,
-          invoiceTraceNumber,
-        }),
-      });
+      if (!invoiceTraceNumber) {
+        console.warn("Missing invoiceTraceNumber for inquiry.");
+        return;
+      }
 
-      const data = await res.json();
+      const result = await inquiryRequest(invoiceTraceNumber, qrType);
+
       setInquiryResponses((prev) => ({
         ...prev,
-        [qrKey]: data,
+        [qrKey]: {
+          request: {
+            CATEGORY: "com.pax.payment.Inquiry",
+            parm: {
+              header: {
+                formatVersion: "1",
+                endPointNamespace: "com.pax.edc.bpsp",
+              },
+              detail: {
+                QRType: qrType,
+                invoiceTraceNumber,
+              },
+            },
+          },
+          response: {
+            body: result,
+          },
+        },
       }));
-    } catch (err) {
-      console.error("Inquiry failed", err);
+    } catch (error) {
+      console.error("Inquiry failed", error);
+
       setInquiryResponses((prev) => ({
         ...prev,
-        [qrKey]: { error: "Failed to fetch inquiry" },
+        [qrKey]: {
+          request: {
+            CATEGORY: "com.pax.payment.Inquiry",
+            parm: {
+              header: {
+                formatVersion: "1",
+                endPointNamespace: "com.pax.edc.bpsp",
+              },
+              detail: {
+                QRType: qrType,
+                invoiceTraceNumber,
+              },
+            },
+          },
+          response: {
+            body: {
+              error: "Inquiry request failed",
+            },
+          },
+        },
       }));
     }
   };
 
-  const handleCancle = async (
+
+  const handleCancel = async (
     qrKey: string,
     qrType: string,
     invoiceTraceNumber: string
   ) => {
     try {
-      const res = await fetch("http://localhost:5001/cancle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          qrType,
-          invoiceTraceNumber,
-        }),
-      });
+      const result = await cancelRequest(qrType, invoiceTraceNumber);
+      console.log("Cancel API result:", result);
 
-      const data = await res.json();
       setCancelResponses((prev) => ({
         ...prev,
-        [qrKey]: data,
+        [qrKey]: {
+          response: { body: result },  // result ตอนนี้เป็น JSON object ที่ parsed แล้ว
+          request: {
+            CATEGORY: "com.pax.payment.CancelCommand",
+            parm: {
+              header: {
+                formatVersion: "1",
+                endPointNamespace: "com.pax.edc.bpsp",
+              },
+              detail: {
+                QRType: qrType,
+                invoiceTraceNumber,
+              },
+            },
+          },
+        },
       }));
-    } catch (err) {
-      console.error("Cancel failed", err);
+    } catch (error) {
+      console.error("Cancel failed", error);
       setCancelResponses((prev) => ({
         ...prev,
         [qrKey]: { error: "Failed to fetch cancel" },
@@ -136,7 +181,13 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     }
   };
 
+
   const downloadVerticalCSV = () => {
+    if (!results || results.length === 0) {
+      alert("No test results to export");
+      return;
+    }
+
     let csvContent = "";
 
     // === Step 1: Create summaryContent first ===
@@ -193,10 +244,10 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                 typeof value === "object" && value !== null
                   ? `"${JSON.stringify(value)}"`
                   : typeof value === "number"
-                  ? `'${value}`
-                  : /^\d+$/.test(value)
-                  ? `'${value}`
-                  : `${value}`;
+                    ? `'${value}`
+                    : /^\d+$/.test(value)
+                      ? `'${value}`
+                      : `${value}`;
 
               let status = "";
               let message = "";
@@ -268,6 +319,8 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
 
         // === Void Section ===
         const voidRes = voidResponses[qrKey];
+        console.log("VOID RESPONSE BODY", voidRes?.response?.body); // <-- ดูตรงนี้
+
         if (voidRes?.response?.body) {
           csvContent += `[ ${test.fileName} - ${result.function} - Void ]\n`;
 
@@ -288,11 +341,18 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
           );
         }
 
+
         csvContent += `\n`;
       });
     });
 
     // === Step 3: Combine summary and full content ===
+    console.log("Final CSV content length:", csvContent.length);
+    if (csvContent.length === 0) {
+      alert("CSV content is empty!");
+      return;
+    }
+
     const finalContent = summaryContent + csvContent;
 
     const blob = new Blob([finalContent], { type: "text/csv;charset=utf-8;" });
@@ -303,7 +363,8 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+    URL.revokeObjectURL(url);
+  }
 
   const capitalize = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1);
@@ -393,8 +454,8 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                       backgroundColor: hasErrors
                         ? "#ffe5e5"
                         : hasSuccess
-                        ? "#f4fff7"
-                        : "#ffffff",
+                          ? "#f4fff7"
+                          : "#ffffff",
                       borderRadius: 10,
                       padding: 15,
                       marginTop: 10,
@@ -450,7 +511,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
 
                         <button
                           onClick={() =>
-                            handleCancle(
+                            handleCancel(
                               qrKey,
                               responseDetail?.QRType,
                               responseDetail?.invoiceTraceNumber
