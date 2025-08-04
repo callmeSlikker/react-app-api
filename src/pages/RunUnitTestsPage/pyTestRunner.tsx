@@ -6,6 +6,9 @@ import FileTreeView from "./FileTest/FileTreeView";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { FileNodeFile, TEST_FILES } from "../../tests/test";
 import { RequestWithValidationResult } from "../../tests/requestWithValidation";
+import testertoolicon from "../../pic/testertoolicon.png";
+import { useConnectionStore } from "./ConnectDevice/store/useConnectionStore";
+
 
 export type SelectedFile = {
   fileName: string;
@@ -16,6 +19,8 @@ export default function PyTestRunner() {
   const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);
   const [results, setResults] = useState<UnitTestResult[][]>([]);
   const [loopCount, setLoopCount] = useState(1);
+  const isCloudConnected = useConnectionStore((state) => state.isCloudConnected);
+  const isWifiConnected = useConnectionStore((state) => state.isWifiConnected);
 
   const reset = () => {
     setSelectedFiles([]);
@@ -70,15 +75,95 @@ export default function PyTestRunner() {
         <div
           style={{
             width: "20%",
-            padding: "8px",
             display: "flex",
             flexDirection: "column",
             flex: 1,
             justifyContent: "space-between",
-            marginTop: 25,
+            background: "rgba(255, 255, 255)",
           }}
         >
           <div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {/* ซ้าย: รูปภาพ */}
+              <img
+                src={testertoolicon}
+                style={{ width: 150, height: 150, objectFit: "contain" }}
+                alt="icon"
+              />
+
+              {/* ขวา: ตัวหนังสือ */}
+              <div>
+                <ul style={{
+                  display: "flex",
+                  justifyContent: 'left',
+                  gap: 15,
+                  margin: 0,
+                }}>
+                  <li style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    backgroundColor: "#ffffffff",
+                    borderRadius: "20px",
+                    border: "1px solid #a1b8e6ff",
+                    boxShadow: "0 4px 12px rgba(98, 126, 202, 0.5)",
+                    height: 40,
+                    width: 60,
+                  }}>
+                    <p className="title"
+                      style={{ fontSize: 14, color: isCloudConnected ? "black" : "black" }}
+                    >
+                      cloud
+                    </p>
+                    {isCloudConnected ? "" : ""}
+                    {isCloudConnected && (
+                      <span
+                        style={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: "50%",
+                          backgroundColor: "green",
+                          display: "inline-block",
+                        }}
+                      ></span>
+                    )}
+                  </li>
+                  <li style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px", paddingLeft: 10,
+                    paddingRight: 10,
+                    backgroundColor: "#ffffffff",
+                    borderRadius: "20px",
+                    border: "1px solid #a1b8e6ff",
+                    boxShadow: "0 4px 12px rgba(98, 126, 202, 0.5)",
+                    height: 40,
+                    width: 60,
+                  }}>
+                    <p className="title"
+                      style={{ fontSize: 14, color: isCloudConnected ? "black" : "black" }}
+                    >
+                      WiFi
+                    </p>
+                    {isWifiConnected ? "" : ""}
+                    {isWifiConnected && (
+                      <span
+                        style={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: "50%",
+                          backgroundColor: "green",
+                          display: "inline-block",
+                        }}
+                      ></span>
+                    )}
+                  </li>
+                </ul>
+              </div>
+            </div>
+
             <div>
               <p
                 style={{
@@ -121,10 +206,11 @@ export default function PyTestRunner() {
 
         <div
           style={{
-            width: "80%",
+            width: "70%",
             padding: "8px",
             display: "flex",
             flexDirection: "column",
+            background: "rgba(216, 213, 209, 0.66)",
           }}
         >
           <div
@@ -137,8 +223,8 @@ export default function PyTestRunner() {
           >
             <p className="title"
               style={{
-                fontSize: 20, 
-                fontWeight: 500 ,
+                fontSize: 20,
+                fontWeight: 500,
                 fontFamily: "revert-layer",
                 marginBottom: 10,
                 width: "25%",

@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useConnectionStore } from "./store/useConnectionStore";
 
 export function ConnectDeviceToCloudSection() {
+  const setCloudConnected = useConnectionStore((state) => state.setCloudConnected);
   const [code, setHost] = useState("00000");
   const [eid, setPort] = useState(9000041);
   const [connectSuccess, setConnectSuccess] = useState(false);
@@ -16,15 +18,18 @@ export function ConnectDeviceToCloudSection() {
       if (res.status === 200 && data.resultCode === "200" && data.message === "connect success") {
         setConnectSuccess(true);
         setConnectFailed(false);
+        setCloudConnected(true); // ✅ อัปเดต global state
         Swal.fire("Connected", "Device connected successfully", "success");
       } else {
         setConnectSuccess(false);
         setConnectFailed(true);
+        setCloudConnected(false); // ❌ กรณีล้มเหลว
         Swal.fire("Failed", "Connect error", "error");
       }
     } catch (error) {
       setConnectSuccess(false);
       setConnectFailed(true);
+      setCloudConnected(false);
       Swal.fire("Error", "Unable to connect", "error");
     }
   };
@@ -111,8 +116,8 @@ export function ConnectDeviceToCloudSection() {
             background: connectSuccess
               ? "#16a34a" // เขียวสำเร็จ
               : connectFailed
-              ? "#dc2626" // แดงล้มเหลว
-              : "#d3d7d8ff", // สีเริ่มต้น
+                ? "#dc2626" // แดงล้มเหลว
+                : "#d3d7d8ff", // สีเริ่มต้น
             color: connectSuccess || connectFailed ? "white" : "black",
             border: "none",
             borderRadius: 4,
@@ -126,8 +131,8 @@ export function ConnectDeviceToCloudSection() {
           {connectSuccess
             ? "Connected"
             : connectFailed
-            ? "Connect Failed"
-            : "Connect to Device"}
+              ? "Connect Failed"
+              : "Connect to Device"}
         </button>
       </div>
     </div>
