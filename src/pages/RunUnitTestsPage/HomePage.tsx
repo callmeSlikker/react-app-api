@@ -23,7 +23,7 @@ export default function HomePage() {
           transition: "all 1s ease",
         }}
       >
-        <p className="title" style={{ fontSize: 70, fontWeight: 500, textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)"}}>
+        <p className="title" style={{ fontSize: 70, fontWeight: 500, textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)" }}>
           welcome to Tester Tool App
         </p>
 
@@ -80,7 +80,7 @@ export default function HomePage() {
                 cursor: "pointer",
                 boxShadow: "0 2px 5px rgba(0,0,0,0.8)",
               }}
-              onClick={() => console.log("Manual Test clicked")}
+              onClick={() => navigate("/manualTest")}
             >
               Manual Test
             </button>
@@ -131,7 +131,7 @@ export default function HomePage() {
         </video>
       </div>
 
-      <div
+      <div className="title"
         style={{
           maxWidth: "1200px",
           margin: "20px auto",
@@ -145,10 +145,12 @@ export default function HomePage() {
           textAlign: "center",
         }}
       >
-        <p>
-          <strong>Tester Tool App</strong>
+        <p className="title" style={{ fontSize: 18, fontWeight: 500 }}>
+          Tester Tool App
         </p>
-        <p>By Slikker</p>
+        <p className="title" style={{ fontSize: 16, fontWeight: 300 }}>
+          By Slikker
+        </p>
       </div>
     </div>
   );
