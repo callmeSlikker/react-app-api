@@ -51,6 +51,7 @@ export function ConnectDeviceToWifiSection() {
           color: "white",
           fontFamily: "inherit",
           textAlign: "center",
+          textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)"
         }}
       >
         Wifi Connect

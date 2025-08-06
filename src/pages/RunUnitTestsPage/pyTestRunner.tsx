@@ -80,16 +80,15 @@ export default function PyTestRunner() {
         style={{
           backgroundColor: "#ffffffff",
           position: "fixed",
-          top: 10,
-          left: 10,
+          top: 20,
+          left: 25,
           color: "#000000ff",
-          borderRadius: "45%",
-          fontSize: 30,
+          fontSize: 18,
           cursor: "pointer",
           border: "1px solid #ffffffff",
         }}
       >
-        ⮜
+        ◀ back
       </button>
       <div
         style={{
@@ -234,23 +233,25 @@ export default function PyTestRunner() {
                 >
                   select test files
                 </p>
+                <div
+                  className="title"
+                  style={{
+                    height: "43vh",
+                    overflowY: "auto",
+                    fontSize: 16,
+                    fontWeight: 400,
+                    marginLeft: 55,
+                    marginTop: 20,
+                    marginBottom: 0,
+                  }}
+                >
+                  <FileTreeView
+                    fileTree={TEST_FILES}
+                    selectedFiles={selectedFiles}
+                    toggleFile={toggleFile}
+                  />
+                </div>
               </div>
-            </div>
-            <div
-              className="title"
-              style={{
-                fontSize: 16,
-                fontWeight: 400,
-                marginLeft: 55,
-                marginTop: 20,
-                marginBottom: 0,
-              }}
-            >
-              <FileTreeView
-                fileTree={TEST_FILES}
-                selectedFiles={selectedFiles}
-                toggleFile={toggleFile}
-              />
             </div>
           </div>
         </div>
@@ -299,19 +300,20 @@ export default function PyTestRunner() {
               Clear All
             </button>
           </div>
-
-          <RunUnitTestsResultSection
-            results={results}
-            isRunningTets={isRunningTets}
-          />
+          <div>
+            <RunUnitTestsResultSection
+              results={results}
+              isRunningTets={isRunningTets}
+            />
+          </div>
         </div>
 
         <div
           className="title"
           style={{
             position: "fixed", // ✅ ตรึงไว้กับหน้าจอ
-            background: "#d2edffff",
-            borderTop: "2px solid #0067ddff",
+            background: "#ffeaaeff",
+            borderTop: "2px solid #ffd000ff",
             padding: "10px 20px",
             display: "flex",
             alignItems: "center",
@@ -340,7 +342,7 @@ export default function PyTestRunner() {
                 paddingLeft: 10,
                 height: 28,
                 width: 42,
-                border: "2px solid #0135a5ff",
+                border: "3px solid #0135a5ff",
                 borderRadius: 4,
                 marginRight: 10,
               }}
@@ -364,18 +366,19 @@ export default function PyTestRunner() {
               onClick={() => runTestsMutation.mutate()}
               disabled={isRunningTets}
               style={{
-                color: "#0135a5ff",
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: 800,
                 display: "flex",
-                alignItems: "center", // จัดกลางแนวตั้ง
-                justifyContent: "center", // จัดกลางแนวนอน
-                backgroundColor: "#77adffff",
-                borderRadius: "5px",
-                border: "3px solid #0135a5ff",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(64, 184, 154, 1)",
+                color: "rgba(36, 99, 82, 1)",
+                borderRadius: "4px",
+                cursor: "pointer",
                 height: 35,
                 width: 200,
-                textAlign: "center", // เสริมเพื่อความชัวร์
+                textAlign: "center",
+                border: "none",
               }}
             >
               START
@@ -385,7 +388,7 @@ export default function PyTestRunner() {
               onClick={reset}
               disabled={isRunningTets}
               style={{
-                backgroundColor: "#0084ffff",
+                backgroundColor: "#8c8d8dff",
                 color: "white",
                 border: "none",
                 borderRadius: 4,

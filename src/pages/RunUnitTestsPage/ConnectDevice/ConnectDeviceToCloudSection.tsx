@@ -45,6 +45,7 @@ export function ConnectDeviceToCloudSection() {
           color: "white",
           fontFamily: "inherit",
           textAlign: "center",
+          textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)"
         }}
       >
         Cloud Connect
@@ -79,6 +80,7 @@ export function ConnectDeviceToCloudSection() {
               fontSize: 16,
               fontFamily: "inherit",
               fontWeight: 100,
+              boxSizing: "border-box",
               borderRadius: 4,
               border: "1px solid #ccc",
               textAlign: "center",
@@ -101,6 +103,7 @@ export function ConnectDeviceToCloudSection() {
               fontSize: 16,
               fontFamily: "inherit",
               fontWeight: 100,
+              boxSizing: "border-box",
               borderRadius: 4,
               border: "1px solid #ccc",
               textAlign: "center",

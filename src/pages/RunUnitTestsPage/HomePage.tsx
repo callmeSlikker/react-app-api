@@ -23,7 +23,7 @@ export default function HomePage() {
           transition: "all 1s ease",
         }}
       >
-        <p className="title" style={{ fontSize: 70, fontWeight: 500 }}>
+        <p className="title" style={{ fontSize: 70, fontWeight: 500, textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)"}}>
           welcome to Tester Tool App
         </p>
 
@@ -45,30 +45,40 @@ export default function HomePage() {
         <div>
           <p
             className="title"
-            style={{ fontSize: 30, fontWeight: 400, marginTop: 50 }}
+            style={{
+              fontSize: 30,
+              fontWeight: 400,
+              marginTop: 50,
+              color: "#fffdfdff",
+              textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)"
+            }}
           >
             select testing type
           </p>
           <div
             style={{
               display: "flex",
-              gap: "20px",
+              gap: "35px",
               justifyContent: "center",
               marginTop: "20px",
             }}
           >
             {/* Manual Test Button */}
-            <button
+            <button className="title"
               style={{
-                padding: "12px 24px",
-                fontSize: "16px",
-                fontWeight: 500,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 200,
+                height: 50,
+                fontSize: 18,
+                fontWeight: 200,
                 borderRadius: "8px",
-                backgroundColor: "#e2e8f0",
-                color: "#1a202c",
+                backgroundColor: "rgba(211, 230, 255, 1)",
+                color: "#0b1831ff",
                 border: "none",
                 cursor: "pointer",
-                boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.8)",
               }}
               onClick={() => console.log("Manual Test clicked")}
             >
@@ -76,22 +86,27 @@ export default function HomePage() {
             </button>
 
             {/* Auto Test Button */}
-            <button
+            <button className="title"
               style={{
-                padding: "12px 24px",
-                fontSize: "16px",
-                fontWeight: 500,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 200,
+                height: 50,
+                fontSize: 18,
+                fontWeight: 200,
                 borderRadius: "8px",
-                backgroundColor: "#4ade80",
-                color: "white",
+                backgroundColor: "rgba(211, 230, 255 , 1)",
+                color: "#0b1831ff",
                 border: "none",
                 cursor: "pointer",
-                boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.8)",
               }}
               onClick={() => navigate("/pyTestRunner")}
             >
               Auto Test
             </button>
+
           </div>
         </div>
       </div>

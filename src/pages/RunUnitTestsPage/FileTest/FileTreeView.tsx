@@ -71,7 +71,7 @@ const FileNode: React.FC<FileNodeProps> = ({
 
   if (node.type === "folder") {
     return (
-      <div style={{ marginLeft: 20, display: "flex", flexDirection: "column" }}>
+      <div style={{ marginLeft: 20, display: "flex", flexDirection: "column"}}>
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <input
             type="checkbox"
