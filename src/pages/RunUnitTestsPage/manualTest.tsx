@@ -1,32 +1,52 @@
 import { useNavigate } from "react-router-dom";
 import testertoolicon from "../../pic/testertoolicon.png";
 import { useConnectionStore } from "./ConnectDevice/store/useConnectionStore";
+import { useState } from "react";
+import Sale56_Input from "../../inputSale/sale56Input";
+import Sale64_Input from "../../inputSale/sale64Input";
+import Sale63_Input from "../../inputSale/sale63Input";
+import Sale57_Input from "../../inputSale/sale57Input";
+import Sale79_Input from "../../inputSale/sale79Input";
+import RequestQR_Input from "../../inputSale/requestQRInput";
+import Void26_Input from "../../inputSale/void26Input";
 
 export default function ManualTest() {
     const navigate = useNavigate();
-    const isCloudConnected = useConnectionStore(
-        (state) => state.isCloudConnected
-    );
+    const isCloudConnected = useConnectionStore((state) => state.isCloudConnected);
     const isWifiConnected = useConnectionStore((state) => state.isWifiConnected);
+
+    const [selectedCommand, setSelectedCommand] = useState<string | null>(null);
+
+    const commands = [
+        "Sale Credit 56",
+        "Sale QR 64",
+        "Sale Wallet 63",
+        "Sale Rabbit 57",
+        "Sale Linepay 79",
+        "Request QR",
+        "Void 26",
+    ];
 
     return (
         <div>
+            {/* ปุ่ม back */}
             <button
                 className="title"
                 onClick={() => navigate("/")}
                 style={{
-                    backgroundColor: "#ffffffff",
+                    backgroundColor: "#fff",
                     position: "fixed",
                     top: 20,
                     left: 25,
-                    color: "#000000ff",
+                    color: "#000",
                     fontSize: 18,
                     cursor: "pointer",
-                    border: "1px solid #ffffffff",
+                    border: "1px solid #fff",
                 }}
             >
                 ◀ back
             </button>
+
             <div
                 style={{
                     display: "flex",
@@ -35,24 +55,18 @@ export default function ManualTest() {
                     marginBottom: 0,
                     marginLeft: 50,
                     marginTop: 40,
-                }}>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    flex: 1,
-                    justifyContent: "space-between",
-                    background: "rgba(255, 255, 255)",
-                }}>
+                }}
+            >
+                {/* ฝั่งซ้าย */}
+                <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
                     <div>
+                        {/* ไอคอน + สถานะ */}
                         <div style={{ display: "flex", alignItems: "center" }}>
-                            {/* ซ้าย: รูปภาพ */}
                             <img
                                 src={testertoolicon}
                                 style={{ width: 150, height: 150, objectFit: "contain" }}
                                 alt="icon"
                             />
-
-                            {/* ขวา: ตัวหนังสือ */}
                             <div>
                                 <ul
                                     style={{
@@ -62,6 +76,7 @@ export default function ManualTest() {
                                         margin: 0,
                                     }}
                                 >
+                                    {/* Cloud */}
                                     <li
                                         style={{
                                             display: "flex",
@@ -69,24 +84,17 @@ export default function ManualTest() {
                                             gap: "8px",
                                             paddingLeft: 10,
                                             paddingRight: 10,
-                                            backgroundColor: "#ffffffff",
+                                            backgroundColor: "#fff",
                                             borderRadius: "20px",
-                                            border: "1px solid #a1b8e6ff",
+                                            border: "1px solid #a1b8e6",
                                             boxShadow: "0 4px 12px rgba(98, 126, 202, 0.5)",
                                             height: 40,
                                             width: 60,
                                         }}
                                     >
-                                        <p
-                                            className="title"
-                                            style={{
-                                                fontSize: 14,
-                                                color: isCloudConnected ? "black" : "black",
-                                            }}
-                                        >
+                                        <p className="title" style={{ fontSize: 14, color: "black" }}>
                                             cloud
                                         </p>
-                                        {isCloudConnected ? "" : ""}
                                         {isCloudConnected && (
                                             <span
                                                 style={{
@@ -99,6 +107,8 @@ export default function ManualTest() {
                                             ></span>
                                         )}
                                     </li>
+
+                                    {/* WiFi */}
                                     <li
                                         style={{
                                             display: "flex",
@@ -106,24 +116,17 @@ export default function ManualTest() {
                                             gap: "8px",
                                             paddingLeft: 10,
                                             paddingRight: 10,
-                                            backgroundColor: "#ffffffff",
+                                            backgroundColor: "#fff",
                                             borderRadius: "20px",
-                                            border: "1px solid #a1b8e6ff",
+                                            border: "1px solid #a1b8e6",
                                             boxShadow: "0 4px 12px rgba(98, 126, 202, 0.5)",
                                             height: 40,
                                             width: 60,
                                         }}
                                     >
-                                        <p
-                                            className="title"
-                                            style={{
-                                                fontSize: 14,
-                                                color: isCloudConnected ? "black" : "black",
-                                            }}
-                                        >
+                                        <p className="title" style={{ fontSize: 14, color: "black" }}>
                                             WiFi
                                         </p>
-                                        {isWifiConnected ? "" : ""}
                                         {isWifiConnected && (
                                             <span
                                                 style={{
@@ -140,6 +143,7 @@ export default function ManualTest() {
                             </div>
                         </div>
 
+                        {/* ชื่อ section */}
                         <div>
                             <p
                                 className="title"
@@ -151,7 +155,7 @@ export default function ManualTest() {
                                     marginBottom: 10,
                                 }}
                             >
-                                TRANSECTION COMMAND
+                                TRANSACTION COMMAND
                             </p>
                             <p
                                 className="title"
@@ -166,9 +170,67 @@ export default function ManualTest() {
                             >
                                 select the command
                             </p>
+
+                            {/* แถบปุ่มทั้งหมด */}
+                            <div
+                                style={{
+                                    height: "auto",
+                                    overflowY: "auto",
+                                    marginLeft: 55,
+                                    marginTop: 20,
+                                    marginBottom: 0,
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: 12,
+                                }}
+                            >
+                                {commands.map((cmd, index) => {
+                                    const isActive = selectedCommand === cmd;
+
+                                    return (
+                                        <button
+                                            key={index}
+                                            className="title"
+                                            onClick={() => setSelectedCommand(cmd)}
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "flex-start",
+                                                alignItems: "center",
+                                                width: 260,
+                                                height: 40,
+                                                fontSize: 16,
+                                                fontWeight: 200,
+                                                borderRadius: "20px",
+                                                color: "#000000",
+                                                border: "none",
+                                                cursor: "pointer",
+                                                backgroundColor: "#eeeeeeff",
+                                                transition: "all 0.2s ease-in-out",
+                                                paddingLeft: 12,
+                                                gap: 12,
+                                            }}
+                                        >
+                                            {isActive && (
+                                                <div
+                                                    style={{
+                                                        width: 25,
+                                                        height: 25,
+                                                        borderRadius: "50%",
+                                                        backgroundColor: "#ffdd1f",
+                                                        flexShrink: 0,
+                                                    }}
+                                                />
+                                            )}
+                                            <span>{cmd} command</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                {/* ฝั่งขวา INPUT DATA */}
                 <div
                     style={{
                         width: "78%",
@@ -177,30 +239,70 @@ export default function ManualTest() {
                         marginTop: 30,
                     }}
                 >
-                    <div
+                    <p
+                        className="title"
                         style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            marginBottom: 5,
+                            fontSize: 30,
+                            fontWeight: 700,
+                            fontFamily: "revert-layer",
+                            marginLeft: 0,
+                            marginBottom: 10,
                         }}
                     >
-                        <p
-                            className="title"
-                            style={{
-                                fontSize: 30,
-                                fontWeight: 700,
-                                fontFamily: "revert-layer",
-                                marginLeft: 0,
-                                marginBottom: 10,
-                            }}
-                        >
-                            INPUT DATA
-                        </p>
-                    </div>
+                        INPUT DATA
+                    </p>
+
+                    {/* input Sale Credit 56 */}
+                    {selectedCommand === "Sale Credit 56" && (
+                        <div style={{ marginTop: 20 }}>
+                            <Sale56_Input />
+                        </div>
+                    )}
+
+                    {/* input Sale QR 64 */}
+                    {selectedCommand === "Sale QR 64" && (
+                        <div style={{ marginTop: 20 }}>
+                            <Sale64_Input />
+                        </div>
+                    )}
+
+                    {/* input Sale Wallet 63 */}
+                    {selectedCommand === "Sale Wallet 63" && (
+                        <div style={{ marginTop: 20 }}>
+                            <Sale63_Input />
+                        </div>
+                    )}
+
+                    {/* input Sale Rabbit 57 */}
+                    {selectedCommand === "Sale Rabbit 57" && (
+                        <div style={{ marginTop: 20 }}>
+                            <Sale57_Input />
+                        </div>
+                    )}
+
+                    {/* input Sale Linepay 79 */}
+                    {selectedCommand === "Sale Linepay 79" && (
+                        <div style={{ marginTop: 20 }}>
+                            <Sale79_Input />
+                        </div>
+                    )}
+
+                    {/* input Request QR */}
+                    {selectedCommand === "Request QR" && (
+                        <div style={{ marginTop: 20 }}>
+                            <RequestQR_Input />
+                        </div>
+                    )}
+
+                    {/* input Void 26 */}
+                    {selectedCommand === "Void 26" && (
+                        <div style={{ marginTop: 20 }}>
+                            <Void26_Input />
+                        </div>
+                    )}
+
                 </div>
             </div>
-
         </div>
-    )
+    );
 }
