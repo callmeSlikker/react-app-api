@@ -9,13 +9,16 @@ import Sale57_Input from "../../inputSale/sale57Input";
 import Sale79_Input from "../../inputSale/sale79Input";
 import RequestQR_Input from "../../inputSale/requestQRInput";
 import Void26_Input from "../../inputSale/void26Input";
+import InquityIQ_Input from "../../inputSale/InquiryIQInput";
+import CancelCA_Input from "../../inputSale/CancelCAInput";
 
 export default function ManualTest() {
     const navigate = useNavigate();
     const isCloudConnected = useConnectionStore((state) => state.isCloudConnected);
     const isWifiConnected = useConnectionStore((state) => state.isWifiConnected);
-
     const [selectedCommand, setSelectedCommand] = useState<string | null>(null);
+    const [response, setResponse] = useState<any>(null);
+    const [isShowingResult, setIsShowingResult] = useState(false);
 
     const commands = [
         "Sale Credit 56",
@@ -24,7 +27,10 @@ export default function ManualTest() {
         "Sale Rabbit 57",
         "Sale Linepay 79",
         "Request QR",
+        "Inquiry IQ",
+        "Cancel CA",
         "Void 26",
+        
     ];
 
     return (
@@ -44,7 +50,7 @@ export default function ManualTest() {
                     border: "1px solid #fff",
                 }}
             >
-                ◀ back
+                ◀
             </button>
 
             <div
@@ -54,7 +60,7 @@ export default function ManualTest() {
                     gap: 50,
                     marginBottom: 0,
                     marginLeft: 50,
-                    marginTop: 40,
+                    marginTop: 0,
                 }}
             >
                 {/* ฝั่งซ้าย */}
@@ -153,22 +159,10 @@ export default function ManualTest() {
                                     fontFamily: "revert-layer",
                                     marginLeft: 30,
                                     marginBottom: 10,
+                                    marginTop: 0
                                 }}
                             >
                                 TRANSACTION COMMAND
-                            </p>
-                            <p
-                                className="title"
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: 500,
-                                    fontFamily: "revert-layer",
-                                    marginLeft: 55,
-                                    marginTop: 0,
-                                    marginBottom: 0,
-                                }}
-                            >
-                                select the command
                             </p>
 
                             {/* แถบปุ่มทั้งหมด */}
@@ -176,7 +170,7 @@ export default function ManualTest() {
                                 style={{
                                     height: "auto",
                                     overflowY: "auto",
-                                    marginLeft: 55,
+                                    marginLeft: 40,
                                     marginTop: 20,
                                     marginBottom: 0,
                                     display: "flex",
@@ -196,7 +190,7 @@ export default function ManualTest() {
                                                 display: "flex",
                                                 justifyContent: "flex-start",
                                                 alignItems: "center",
-                                                width: 260,
+                                                width: 250,
                                                 height: 40,
                                                 fontSize: 16,
                                                 fontWeight: 200,
@@ -255,10 +249,14 @@ export default function ManualTest() {
                     {/* input Sale Credit 56 */}
                     {selectedCommand === "Sale Credit 56" && (
                         <div style={{ marginTop: 20 }}>
-                            <Sale56_Input />
+                            <Sale56_Input
+                                setResponse={setResponse}
+                                response={response}
+                                isShowingResult={isShowingResult}
+                                setIsShowingResult={setIsShowingResult}
+                            />
                         </div>
                     )}
-
                     {/* input Sale QR 64 */}
                     {selectedCommand === "Sale QR 64" && (
                         <div style={{ marginTop: 20 }}>
@@ -291,6 +289,20 @@ export default function ManualTest() {
                     {selectedCommand === "Request QR" && (
                         <div style={{ marginTop: 20 }}>
                             <RequestQR_Input />
+                        </div>
+                    )}
+
+                                        {/* input Induiry IQ */}
+                    {selectedCommand === "Inquiry IQ" && (
+                        <div style={{ marginTop: 20 }}>
+                            <InquityIQ_Input />
+                        </div>
+                    )}
+
+                    {/* input Cancel CA */}
+                    {selectedCommand === "Cancel CA" && (
+                        <div style={{ marginTop: 20 }}>
+                            <CancelCA_Input />
                         </div>
                     )}
 

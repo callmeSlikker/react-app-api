@@ -6,16 +6,14 @@ import ManualTest from "./pages/RunUnitTestsPage/manualTest";
 
 export default function App() {
   return (
-    <>
-      <React.StrictMode>
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/pyTestRunner" element={<PyTestRunner />} />
-            <Route path="/manualTest" element={<ManualTest />} />
-          </Routes>
-        </HashRouter>
-      </React.StrictMode>
-    </>
+    <React.StrictMode>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/pyTestRunner" element={<PyTestRunner />} />
+          <Route path="/manualTest" element={<ManualTest />} />
+        </Routes>
+      </HashRouter>
+    </React.StrictMode>
   );
 }
