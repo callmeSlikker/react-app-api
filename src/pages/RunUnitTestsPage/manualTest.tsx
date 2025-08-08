@@ -30,7 +30,7 @@ export default function ManualTest() {
         "Inquiry IQ",
         "Cancel CA",
         "Void 26",
-        
+
     ];
 
     return (
@@ -260,10 +260,14 @@ export default function ManualTest() {
                     {/* input Sale QR 64 */}
                     {selectedCommand === "Sale QR 64" && (
                         <div style={{ marginTop: 20 }}>
-                            <Sale64_Input />
+                            <Sale64_Input
+                                setResponse={setResponse}
+                                response={response}
+                                isShowingResult={isShowingResult}
+                                setIsShowingResult={setIsShowingResult}
+                            />
                         </div>
                     )}
-
                     {/* input Sale Wallet 63 */}
                     {selectedCommand === "Sale Wallet 63" && (
                         <div style={{ marginTop: 20 }}>
@@ -292,7 +296,7 @@ export default function ManualTest() {
                         </div>
                     )}
 
-                                        {/* input Induiry IQ */}
+                    {/* input Induiry IQ */}
                     {selectedCommand === "Inquiry IQ" && (
                         <div style={{ marginTop: 20 }}>
                             <InquityIQ_Input />

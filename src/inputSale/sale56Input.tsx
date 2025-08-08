@@ -1,4 +1,16 @@
 import React, { useState } from "react";
+import { voidRequest } from "../buttons/voidRequest";
+
+export const downloadCSV = (filename: string, content: string) => {
+    const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
 
 const cardOptions = [
     { D2: "VISA-CARD", D4: "04" },
@@ -29,9 +41,14 @@ export default function Sale56_Input({
     const [selectedCard, setSelectedCard] = useState({ ...cardOptions[0] });
     const [amount, setAmount] = useState("1.00");
     const [requestBody, setRequestBody] = useState<any>(null);
+    const [cards, setCards] = useState([...cardOptions]);
+    const [selectedCardIndex, setSelectedCardIndex] = useState(0);
+    const [saleInvoiceTraceNumber, setSaleInvoiceTraceNumber] = useState<string | null>(null);
 
 
     const handleSubmit = async () => {
+        const card = cards[selectedCardIndex];
+
         const payload = {
             CATEGORY: "com.pax.payment.SaleCredit",
             parm: {
@@ -44,14 +61,14 @@ export default function Sale56_Input({
                     mid,
                     tid_bbl,
                     tid_unionpay,
-                    D2: selectedCard.D2,
-                    D4: selectedCard.D4,
+                    D2: card.D2,
+                    D4: card.D4,
                 },
             },
         };
 
         try {
-            setRequestBody(payload); // 🆕 เก็บ request ไว้แสดงผล
+            setRequestBody(payload); // เก็บ request ไว้แสดงผล
             const res = await fetch("http://localhost:9092/createRequest", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -72,12 +89,39 @@ export default function Sale56_Input({
             setResponse(parsedResponse);
             setIsShowingResult(true);
 
-            setIsShowingResult(true);
+            // ตัวอย่าง สมมติ invoiceTraceNumber อยู่ใน parsedResponse.invoiceTraceNumber
+            if (parsedResponse?.invoiceTraceNumber) {
+                setSaleInvoiceTraceNumber(parsedResponse.invoiceTraceNumber);
+            } else if (parsedResponse?.body?.invoiceTraceNumber) {
+                setSaleInvoiceTraceNumber(parsedResponse.body.invoiceTraceNumber);
+            } else {
+                console.warn("invoiceTraceNumber not found in response");
+            }
         } catch (err) {
             console.error("Error sending request:", err);
         }
     };
 
+    const handleVoid = async () => {
+        console.log("Void clicked, invoiceTraceNumber:", saleInvoiceTraceNumber);
+
+        if (!saleInvoiceTraceNumber) {
+            console.warn("Missing invoiceTraceNumber for void.");
+            return;
+        }
+
+        try {
+            const result = await voidRequest(saleInvoiceTraceNumber);
+            console.log("Void result:", result);
+
+            setResponse(result.response.body);
+            setRequestBody(result.request);
+            setIsShowingResult(true);
+        } catch (error) {
+            console.error("Void failed", error);
+            // ... existing error handling ...
+        }
+    };
 
     if (isShowingResult) {
         return (
@@ -97,6 +141,7 @@ export default function Sale56_Input({
                         Sale Credit 56 Input
                     </p>
                 </div>
+
                 {/* แสดงสองฝั่ง */}
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 30, marginLeft: 50, maxWidth: "80%" }}>
                     {/* ฝั่ง Request */}
@@ -141,6 +186,21 @@ export default function Sale56_Input({
                         </pre>
                     </div>
                 </div>
+                <button
+                    onClick={handleVoid}
+                    style={{
+                        marginTop: 20,
+                        marginLeft: 10,
+                        padding: "6px 12px",
+                        backgroundColor: "#ef4444",
+                        color: "white",
+                        border: "none",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                    }}
+                >
+                    ⛔ Void Request
+                </button>
 
                 {/* ปุ่ม Back */}
                 <button
@@ -332,59 +392,51 @@ export default function Sale56_Input({
                             </tr>
                         </thead>
                         <tbody>
-                            {cardOptions.map((card, idx) => (
-                                <tr key={idx}>
-                                    <td
-                                        style={{
-                                            border: "2px solid #000000ff",
-                                            padding: 8,
-                                            color: "#000000ff",
-                                        }}
-                                    >
+                            {cards.map((card, idx) => (
+                                <tr
+                                    key={idx}
+                                    style={{
+                                        backgroundColor:
+                                            selectedCardIndex === idx ? "#ffffffff" : "transparent",
+                                        cursor: "pointer",
+                                    }}
+                                    onClick={() => setSelectedCardIndex(idx)}
+                                >
+                                    <td style={{ border: "2px solid #000", padding: 8 }}>
                                         <input
-                                            value={
-                                                card.D2 === selectedCard.D2
-                                                    ? selectedCard.D2
-                                                    : card.D2
-                                            }
-                                            onChange={(e) =>
-                                                setSelectedCard({
-                                                    ...selectedCard,
-                                                    D2: e.target.value,
-                                                })
-                                            }
+                                            value={card.D2}
+                                            onChange={(e) => {
+                                                const updated = [...cards];
+                                                updated[idx].D2 = e.target.value;
+                                                setCards(updated);
+
+                                                if (selectedCardIndex === idx) {
+                                                    setSelectedCard(updated[idx]);
+                                                }
+                                            }}
                                             style={{
                                                 width: "100%",
-                                                backgroundColor: "#ffffffff",
-                                                color: "#000000ff",
+                                                backgroundColor: "#fff",
                                                 textAlign: "center",
                                                 border: "none",
                                             }}
                                         />
                                     </td>
-                                    <td
-                                        style={{
-                                            border: "2px solid #000000ff",
-                                            padding: 8,
-                                            color: "#000000ff",
-                                        }}
-                                    >
+                                    <td style={{ border: "2px solid #000", padding: 8 }}>
                                         <input
-                                            value={
-                                                card.D2 === selectedCard.D2
-                                                    ? selectedCard.D4
-                                                    : card.D4
-                                            }
-                                            onChange={(e) =>
-                                                setSelectedCard({
-                                                    ...selectedCard,
-                                                    D4: e.target.value,
-                                                })
-                                            }
+                                            value={card.D4}
+                                            onChange={(e) => {
+                                                const updated = [...cards];
+                                                updated[idx].D4 = e.target.value;
+                                                setCards(updated);
+
+                                                if (selectedCardIndex === idx) {
+                                                    setSelectedCard(updated[idx]);
+                                                }
+                                            }}
                                             style={{
                                                 width: "100%",
-                                                backgroundColor: "#ffffffff",
-                                                color: "#000000ff",
+                                                backgroundColor: "#fff",
                                                 textAlign: "center",
                                                 border: "none",
                                             }}
@@ -393,6 +445,7 @@ export default function Sale56_Input({
                                 </tr>
                             ))}
                         </tbody>
+
                     </table>
                 </div>
             </div>

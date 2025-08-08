@@ -32,6 +32,7 @@ export default function HomePage() {
             display: "flex",
             justifyContent: 'center',
             gap: 36,
+            marginBottom: 0
           }}
         >
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -48,7 +49,8 @@ export default function HomePage() {
             style={{
               fontSize: 30,
               fontWeight: 400,
-              marginTop: 50,
+              marginTop: 30,
+              marginBottom: 20,
               color: "#fffdfdff",
               textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)"
             }}
@@ -58,9 +60,8 @@ export default function HomePage() {
           <div
             style={{
               display: "flex",
-              gap: "35px",
+              gap: 36,
               justifyContent: "center",
-              marginTop: "20px",
             }}
           >
             {/* Manual Test Button */}
