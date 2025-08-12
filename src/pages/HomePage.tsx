@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import backgroundvideo from "../../video/background2.mp4";
-import { ConnectDeviceToCloudSection } from "./ConnectDevice/ConnectDeviceToCloudSection";
-import { ConnectDeviceToWifiSection } from "./ConnectDevice/ConnectDeviceToWifiSection";
+import backgroundvideo from "../video/background2.mp4";
+import { ConnectDeviceToCloudSection } from "./RunUnitTestsPage/ConnectDevice/ConnectDeviceToCloudSection";
+import { ConnectDeviceToWifiSection } from "./RunUnitTestsPage/ConnectDevice/ConnectDeviceToWifiSection";
 import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
@@ -23,16 +23,23 @@ export default function HomePage() {
           transition: "all 1s ease",
         }}
       >
-        <p className="title" style={{ fontSize: 70, fontWeight: 500, textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)" }}>
+        <p
+          className="title"
+          style={{
+            fontSize: 70,
+            fontWeight: 500,
+            textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)",
+          }}
+        >
           welcome to Tester Tool App
         </p>
 
         <div
           style={{
             display: "flex",
-            justifyContent: 'center',
+            justifyContent: "center",
             gap: 36,
-            marginBottom: 0
+            marginBottom: 0,
           }}
         >
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -52,7 +59,7 @@ export default function HomePage() {
               marginTop: 30,
               marginBottom: 20,
               color: "#fffdfdff",
-              textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)"
+              textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)",
             }}
           >
             select testing type
@@ -65,7 +72,8 @@ export default function HomePage() {
             }}
           >
             {/* Manual Test Button */}
-            <button className="title"
+            <button
+              className="title"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -87,7 +95,8 @@ export default function HomePage() {
             </button>
 
             {/* Auto Test Button */}
-            <button className="title"
+            <button
+              className="title"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -108,6 +117,28 @@ export default function HomePage() {
               Auto Test
             </button>
 
+            {/* Histories Button */}
+            <button
+              className="title"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 200,
+                height: 50,
+                fontSize: 18,
+                fontWeight: 200,
+                borderRadius: "8px",
+                backgroundColor: "rgba(211, 230, 255 , 1)",
+                color: "#0b1831ff",
+                border: "none",
+                cursor: "pointer",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.8)",
+              }}
+              onClick={() => navigate("/histories")}
+            >
+              Histories
+            </button>
           </div>
         </div>
       </div>
@@ -132,7 +163,8 @@ export default function HomePage() {
         </video>
       </div>
 
-      <div className="title"
+      <div
+        className="title"
         style={{
           maxWidth: "1200px",
           margin: "20px auto",

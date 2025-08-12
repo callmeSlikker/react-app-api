@@ -23,18 +23,10 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
     {}
   );
   const [voidResponses, setVoidResponses] = useState<Record<string, any>>({});
-  const [caseKey, setCaseKey] = useState<string>("");
 
   const [expandedFiles, setExpandedFiles] = useState<Record<string, boolean>>(
     {}
   );
-
-  const toggleExpandFile = (fileName: string) => {
-    setExpandedFiles((prev) => ({
-      ...prev,
-      [fileName]: !prev[fileName],
-    }));
-  };
 
   const toggleFileCollapse = (fileName: string) => {
     setExpandedFiles((prev) => ({ ...prev, [fileName]: !prev[fileName] }));
@@ -380,7 +372,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
   };
 
   return (
-    <div>
+    <div style={{width: "100%"}}>
       {results.length > 0 && (
         <div style={{ marginBottom: 20 }}>
           <button

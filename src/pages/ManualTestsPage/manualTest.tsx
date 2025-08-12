@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import testertoolicon from "../../pic/testertoolicon.png";
-import { useConnectionStore } from "./ConnectDevice/store/useConnectionStore";
+import { useConnectionStore } from "../RunUnitTestsPage/ConnectDevice/store/useConnectionStore";
 import { useState } from "react";
 import Sale56_Input from "../../inputSale/sale56Input";
 import Sale64_Input from "../../inputSale/sale64Input";
@@ -249,23 +249,13 @@ export default function ManualTest() {
                     {/* input Sale Credit 56 */}
                     {selectedCommand === "Sale Credit 56" && (
                         <div style={{ marginTop: 20 }}>
-                            <Sale56_Input
-                                setResponse={setResponse}
-                                response={response}
-                                isShowingResult={isShowingResult}
-                                setIsShowingResult={setIsShowingResult}
-                            />
+                            <Sale56_Input />
                         </div>
                     )}
                     {/* input Sale QR 64 */}
                     {selectedCommand === "Sale QR 64" && (
                         <div style={{ marginTop: 20 }}>
-                            <Sale64_Input
-                                setResponse={setResponse}
-                                response={response}
-                                isShowingResult={isShowingResult}
-                                setIsShowingResult={setIsShowingResult}
-                            />
+                            <Sale64_Input />
                         </div>
                     )}
                     {/* input Sale Wallet 63 */}

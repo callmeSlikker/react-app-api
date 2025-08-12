@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { RequestWithValidationResult } from "../tests/requestWithValidation";
 
 const QROptions = [
     { D2: "PROMPTPAY", D4: "03" },
@@ -10,19 +11,7 @@ const QROptions = [
     { D2: "QR TPN", D4: "11" },
 ];
 
-type Props = {
-    setResponse: React.Dispatch<React.SetStateAction<any>>;
-    response?: any;
-    isShowingResult: boolean;
-    setIsShowingResult: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-export default function Sale64_Input({
-    setResponse,
-    response,
-    isShowingResult,
-    setIsShowingResult,
-}: Props) {
+export default function Sale64_Input() {
     const [mid, setMid] = useState("000002200869253");
     const [tid_qrc, setTIDQRC] = useState("00000000");
     const [tid_promptpay, setTIDPROMPTPAY] = useState("00000000");
@@ -31,6 +20,7 @@ export default function Sale64_Input({
     const [requestBody, setRequestBody] = useState<any>(null);
     const [qrc, setqrc] = useState([...QROptions]);
     const [selectedQRCIndex, setSelectedQRCIndex] = useState(0);
+    const [response, setResponse] = useState<RequestWithValidationResult | null>(null);
 
 
     const handleSubmit = async () => {
@@ -74,16 +64,13 @@ export default function Sale64_Input({
             }
 
             setResponse(parsedResponse);
-            setIsShowingResult(true);
-
-            setIsShowingResult(true);
         } catch (err) {
             console.error("Error sending request:", err);
         }
     };
 
 
-    if (isShowingResult) {
+    if (response) {
         return (
             <div style={{ padding: 20, backgroundColor: "#ffffffff", borderRadius: 8 }}>
                 <div>
@@ -146,21 +133,6 @@ export default function Sale64_Input({
                     </div>
                 </div>
 
-                {/* ปุ่ม Back */}
-                <button
-                    onClick={() => setIsShowingResult(false)}
-                    style={{
-                        marginTop: 20,
-                        padding: "6px 12px",
-                        backgroundColor: "#3b82f6",
-                        color: "white",
-                        border: "none",
-                        borderRadius: 4,
-                        cursor: "pointer",
-                    }}
-                >
-                    ◀ Back to Input
-                </button>
             </div>
         );
     }
