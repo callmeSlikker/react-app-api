@@ -82,7 +82,7 @@ export default function Sale64_Input() {
 
     const expectedResponse = {
       "detail.merchantID": mid,
-      "header.terminalID": tid_qrc || tid_promptpay,
+      "header.terminalID": [tid_qrc, tid_promptpay],
       "detail.cardIssuerName": qrcredit.D2,
       "detail.cardIssuerID": qrcredit.D4,
     };

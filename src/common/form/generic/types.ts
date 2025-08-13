@@ -11,11 +11,10 @@ export interface GenericFormField {
   key: string;
   value?: string | number;
   type: InputType;
-  options?: string[];
+  options?: { label: string; value: string | number }[];
 }
 
 export type GenericFormFields = Record<string, GenericFormField>;
-
 
 export interface GenericTableColumn {
   key: string;

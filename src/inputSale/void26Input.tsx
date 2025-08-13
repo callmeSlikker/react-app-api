@@ -52,6 +52,12 @@ export default function Void26_Input() {
     const data = payload;
     const expect = expectedResponse;
 
+    try {
+      await handleSubmitForm(name, method, url, data, expect);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+
   };
 
   return (

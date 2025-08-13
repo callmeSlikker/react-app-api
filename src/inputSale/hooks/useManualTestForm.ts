@@ -4,13 +4,13 @@ import {
   RequestWithValidationResult,
 } from "../../tests/requestWithValidation";
 import { Method } from "axios";
-import { useTestHistory } from "./useTestHistory";
+import { HISTORY_STORAGE_KEY, useTestHistory } from "./useTestHistory";
 
 export const useManualTestForm = () => {
   const [response, setResponse] = useState<RequestWithValidationResult | null>(
     null
   );
-  const { addHistory } = useTestHistory();
+  const { addHistory } = useTestHistory(HISTORY_STORAGE_KEY.MANUAL_HISTORIES);
 
   const handleSubmitForm = async (
     name: string,

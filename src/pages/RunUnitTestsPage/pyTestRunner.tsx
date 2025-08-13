@@ -8,7 +8,7 @@ import { FileNodeFile, TEST_FILES } from "../../tests/test";
 import { RequestWithValidationResult } from "../../tests/requestWithValidation";
 import testertoolicon from "../../pic/testertoolicon.png";
 import { useConnectionStore } from "./ConnectDevice/store/useConnectionStore";
-import { useTestHistory } from "../../inputSale/hooks/useTestHistory";
+import { HISTORY_STORAGE_KEY, useTestHistory } from "../../inputSale/hooks/useTestHistory";
 
 export type SelectedFile = {
   fileName: string;
@@ -24,7 +24,7 @@ export default function PyTestRunner() {
     (state) => state.isCloudConnected
   );
   const isWifiConnected = useConnectionStore((state) => state.isWifiConnected);
-  const { addHistory } = useTestHistory();
+  const { addHistory } = useTestHistory(HISTORY_STORAGE_KEY.AUTO_HISTORIES);
 
   const reset = () => {
     setSelectedFiles([]);

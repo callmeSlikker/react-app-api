@@ -6,9 +6,12 @@ export interface HistoryProps extends RequestWithValidationResult {
   date: string;
 }
 
-const STORAGE_KEY = "histories";
+export enum HISTORY_STORAGE_KEY {
+  MANUAL_HISTORIES = "manual_histories",
+  AUTO_HISTORIES = "auto_histories",
+}
 
-export const useTestHistory = () => {
+export const useTestHistory = (STORAGE_KEY: HISTORY_STORAGE_KEY) => {
   // Initialize state directly from localStorage, parsing safely
   const [histories, setHistories] = useState<HistoryProps[]>(() => {
     try {
@@ -22,7 +25,7 @@ export const useTestHistory = () => {
     return [];
   });
 
-  console.log("historiesasdf", histories)
+  console.log("histories", histories)
 
   // Sync changes back to localStorage
   useEffect(() => {

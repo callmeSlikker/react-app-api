@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   HistoryProps,
+  HISTORY_STORAGE_KEY,
   useTestHistory,
 } from "../../inputSale/hooks/useTestHistory";
 
@@ -9,18 +10,32 @@ const ITEMS_PER_PAGE = 5;
 
 export default function HistoriesPage() {
   const navigate = useNavigate();
-  const { histories } = useTestHistory();
+
+  // Track which history type is selected
+  const [activeTab, setActiveTab] = useState<HISTORY_STORAGE_KEY>(
+    HISTORY_STORAGE_KEY.MANUAL_HISTORIES
+  );
+
+  // Separate hooks for each history type
+  const manualHistory = useTestHistory(HISTORY_STORAGE_KEY.MANUAL_HISTORIES);
+  const autoHistory = useTestHistory(HISTORY_STORAGE_KEY.AUTO_HISTORIES);
+
+  // Choose which data set to display based on tab
+  const histories =
+    activeTab === HISTORY_STORAGE_KEY.MANUAL_HISTORIES
+      ? manualHistory.histories
+      : autoHistory.histories;
 
   const [searchDate, setSearchDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter by date substring (simple)
+  // Filter by date substring
   const filteredHistories = useMemo(() => {
     if (!searchDate.trim()) return histories;
     return histories.filter((h) => h.date.includes(searchDate.trim()));
   }, [histories, searchDate]);
 
-  // Pagination logic
+  // Pagination
   const totalPages = Math.ceil(filteredHistories.length / ITEMS_PER_PAGE);
   const pageData = filteredHistories.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -34,6 +49,7 @@ export default function HistoriesPage() {
 
   return (
     <div>
+      {/* Back button */}
       <button
         className="title"
         onClick={() => navigate("/")}
@@ -50,6 +66,7 @@ export default function HistoriesPage() {
       >
         ◀
       </button>
+
       <div
         style={{
           maxWidth: "88%",
@@ -67,15 +84,50 @@ export default function HistoriesPage() {
             fontSize: 42,
             fontWeight: 800,
             marginBottom: 10,
-            cursor: "default",
-            color: "#284a7eff",
-            fontFamily: "inherit",
             textAlign: "center",
+            color: "#284a7eff",
           }}
         >
           All HISTORIES
         </div>
 
+        {/* Tabs */}
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            marginBottom: 20,
+            justifyContent: "center",
+          }}
+        >
+          {[
+            { key: HISTORY_STORAGE_KEY.MANUAL_HISTORIES, label: "Manual" },
+            { key: HISTORY_STORAGE_KEY.AUTO_HISTORIES, label: "Auto" },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => {
+                setActiveTab(tab.key);
+                setCurrentPage(1);
+              }}
+              style={{
+                padding: "10px 20px",
+                borderRadius: 8,
+                border: "2px solid #007ACC",
+                backgroundColor:
+                  activeTab === tab.key ? "#007ACC" : "#ffffffff",
+                color: activeTab === tab.key ? "white" : "#007ACC",
+                fontWeight: "700",
+                cursor: "pointer",
+                transition: "all 0.25s ease",
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Search bar */}
         <div
           style={{
             marginBottom: 30,
@@ -91,8 +143,6 @@ export default function HistoriesPage() {
               fontWeight: 700,
               fontSize: 16,
               color: "#004a99",
-              userSelect: "none",
-              flexShrink: 0,
             }}
           >
             Search by Thai Date (YYYY-MM-DD) :
@@ -115,13 +165,11 @@ export default function HistoriesPage() {
               width: 150,
               outline: "none",
               transition: "border-color 0.25s ease",
-              boxShadow: "inset 0 1px 4px rgba(0,0,0,0.08)",
             }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = "#005fbc")}
-            onBlur={(e) => (e.currentTarget.style.borderColor = "#007ACC")}
           />
         </div>
 
+        {/* History table */}
         <div
           style={{
             overflowX: "auto",
@@ -145,7 +193,8 @@ export default function HistoriesPage() {
             <thead>
               <tr
                 style={{
-                  background: "linear-gradient(90deg, #007ACC 0%, #005f99 100%)",
+                  background:
+                    "linear-gradient(90deg, #007ACC 0%, #005f99 100%)",
                   color: "white",
                   fontWeight: "700",
                   fontSize: 16,
@@ -180,7 +229,7 @@ export default function HistoriesPage() {
               {pageData.length === 0 && (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={7}
                     style={{
                       padding: 30,
                       textAlign: "center",
@@ -199,8 +248,8 @@ export default function HistoriesPage() {
                   typeof entry.response.code === "number"
                     ? entry.response.code
                     : typeof entry.response.code === "string"
-                      ? parseInt(entry.response.code, 10)
-                      : NaN;
+                    ? parseInt(entry.response.code, 10)
+                    : NaN;
 
                 const isSuccess =
                   !isNaN(codeNumber) && codeNumber >= 200 && codeNumber < 300;
@@ -218,8 +267,8 @@ export default function HistoriesPage() {
                       (e.currentTarget.style.backgroundColor = "#e6f0fc")
                     }
                     onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      i % 2 === 0 ? "#fefefe" : "#f4f8fc")
+                      (e.currentTarget.style.backgroundColor =
+                        i % 2 === 0 ? "#fefefe" : "#f4f8fc")
                     }
                   >
                     <td
@@ -331,8 +380,9 @@ export default function HistoriesPage() {
             </tbody>
           </table>
         </div>
+        {/* keep your existing table rendering here, using `pageData` */}
 
-        {/* Pagination Controls */}
+        {/* Pagination */}
         <div
           style={{
             marginTop: 30,
@@ -340,84 +390,13 @@ export default function HistoriesPage() {
             justifyContent: "center",
             alignItems: "center",
             gap: 18,
-            fontWeight: "600",
-            color: "#004a99",
-            userSelect: "none",
           }}
         >
-          <button
-            onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            style={{
-              padding: "10px 22px",
-              borderRadius: 50,
-              border: "2px solid #007ACC",
-              backgroundColor: currentPage === 1 ? "#ffffffff" : "#007ACC",
-              color: currentPage === 1 ? "#363636ff" : "white",
-              fontWeight: "700",
-              fontSize: 15,
-              cursor: currentPage === 1 ? "not-allowed" : "pointer",
-              boxShadow:
-                currentPage === totalPages
-                  ? "none"
-                  : "0 4px 10px rgba(0, 122, 204, 0.35)",
-              transition: "all 0.3s ease",
-            }}
-            aria-label="Previous page"
-            onMouseEnter={(e) =>
-              currentPage !== 1 &&
-              (e.currentTarget.style.backgroundColor = "#005f99")
-            }
-            onMouseLeave={(e) =>
-              currentPage !== 1 &&
-              (e.currentTarget.style.backgroundColor = "#007ACC")
-            }
-          >
-            Prev
-          </button>
-
-          <span
-            style={{
-              fontSize: 16,
-              userSelect: "none",
-              minWidth: 120,
-              textAlign: "center",
-            }}
-          >
-            Page {currentPage} of {totalPages}
+          <button onClick={() => onPageChange(currentPage - 1)}>Prev</button>
+          <span>
+            Page {totalPages === 0 ? 0 : currentPage} of {totalPages}
           </span>
-
-          <button
-            onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            style={{
-              padding: "10px 22px",
-              borderRadius: 50,
-              border: "2px solid #007ACC",
-              backgroundColor: currentPage === totalPages ? "#ffffffff" : "#007ACC",
-              color: currentPage === totalPages ? "#363636ff" : "white",
-              fontWeight: "700",
-              fontSize: 15,
-              cursor: currentPage === totalPages ? "not-allowed" : "pointer",
-              boxShadow:
-                currentPage === totalPages
-                  ? "none"
-                  : "0 4px 10px rgba(0, 122, 204, 0.35)",
-              transition: "all 0.3s ease",
-            }}
-            aria-label="Next page"
-            onMouseEnter={(e) =>
-              currentPage !== totalPages &&
-              (e.currentTarget.style.backgroundColor = "#005f99")
-            }
-            onMouseLeave={(e) =>
-              currentPage !== totalPages &&
-              (e.currentTarget.style.backgroundColor = "#007ACC")
-            }
-          >
-            Next
-          </button>
-          
+          <button onClick={() => onPageChange(currentPage + 1)}>Next</button>
         </div>
       </div>
     </div>

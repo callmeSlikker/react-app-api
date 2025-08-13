@@ -78,6 +78,20 @@ export async function requestWithValidation(
             } else {
               success.push(`Expect ${key} to be present`);
             }
+          }
+          // If expectedValue is an array, check if actualValue matches any of them
+          else if (Array.isArray(expectedValue)) {
+            if (expectedValue.includes(actualValue)) {
+              success.push(
+                `Expect ${key} to be one of ${expectedValue.join(", ")}`
+              );
+            } else {
+              errors.push(
+                `Expect ${key} to be one of ${expectedValue.join(
+                  ", "
+                )}, but got ${actualValue}`
+              );
+            }
           } else if (expectedValue !== actualValue) {
             errors.push(
               `Expect ${key} to be ${expectedValue}, but got ${actualValue}`
