@@ -39,7 +39,7 @@ export function ConnectDeviceToCloudSection() {
       <div
         style={{
           fontSize: 30,
-          fontWeight: 400,
+          fontWeight: 500,
           marginBottom: 10,
           cursor: "default",
           color: "white",
@@ -74,7 +74,7 @@ export function ConnectDeviceToCloudSection() {
             value={code}
             onChange={(e) => setHost(e.target.value)}
             style={{
-              width: "100%",
+              width: "250px",
               marginTop: 4,
               padding: "8px 10px",
               fontSize: 16,
@@ -97,7 +97,7 @@ export function ConnectDeviceToCloudSection() {
             value={eid}
             onChange={(e) => setPort(Number(e.target.value))}
             style={{
-              width: "100%",
+              width: "250px",
               marginTop: 4,
               padding: "8px 10px",
               fontSize: 16,

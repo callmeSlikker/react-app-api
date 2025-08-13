@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import { RunUnitTestsResultSection } from "./RunUnitTestsResult/RunUnitTestsResultSection";
@@ -79,19 +78,19 @@ export default function PyTestRunner() {
     <div>
       <button
         className="title"
-        onClick={() => navigate("/")} // หรือ path ของ HomePage.tsx ถ้าคุณตั้งชื่ออื่น
+        onClick={() => navigate("/")}
         style={{
           backgroundColor: "#ffffffff",
           position: "fixed",
           top: 20,
-          left: 25,
+          left: 20,
           color: "#000000ff",
           fontSize: 18,
           cursor: "pointer",
           border: "1px solid #ffffffff",
         }}
       >
-        ◀ back
+        ◀
       </button>
       <div
         style={{
@@ -100,7 +99,7 @@ export default function PyTestRunner() {
           gap: 50,
           marginBottom: 0,
           marginLeft: 50,
-          marginTop: 40,
+          marginTop: 10,
         }}
       >
         <div>
@@ -219,6 +218,7 @@ export default function PyTestRunner() {
                     fontFamily: "revert-layer",
                     marginLeft: 30,
                     marginBottom: 10,
+                    marginTop: 0,
                   }}
                 >
                   TEST CASE
@@ -374,14 +374,14 @@ export default function PyTestRunner() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: "rgba(64, 184, 154, 1)",
-                color: "rgba(36, 99, 82, 1)",
-                borderRadius: "4px",
+                backgroundColor: "rgba(114, 190, 171, 1)",
+                color: "rgba(22, 58, 48, 1)",
+                borderRadius: 9,
                 cursor: "pointer",
                 height: 35,
                 width: 200,
                 textAlign: "center",
-                border: "none",
+                border: "3px solid #2b463fff",
               }}
             >
               START

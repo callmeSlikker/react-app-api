@@ -16,7 +16,7 @@ export default function ManualTest() {
     const navigate = useNavigate();
     const isCloudConnected = useConnectionStore((state) => state.isCloudConnected);
     const isWifiConnected = useConnectionStore((state) => state.isWifiConnected);
-    const [selectedCommand, setSelectedCommand] = useState<string | null>(null);
+    const [selectedCommand, setSelectedCommand] = useState<string>("Sale Credit 56");;
     const [response, setResponse] = useState<any>(null);
     const [isShowingResult, setIsShowingResult] = useState(false);
 
@@ -43,7 +43,7 @@ export default function ManualTest() {
                     backgroundColor: "#fff",
                     position: "fixed",
                     top: 20,
-                    left: 25,
+                    left: 20,
                     color: "#000",
                     fontSize: 18,
                     cursor: "pointer",
@@ -60,7 +60,7 @@ export default function ManualTest() {
                     gap: 50,
                     marginBottom: 0,
                     marginLeft: 50,
-                    marginTop: 0,
+                    marginTop: 10,
                 }}
             >
                 {/* ฝั่งซ้าย */}

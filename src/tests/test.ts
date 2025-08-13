@@ -37,7 +37,7 @@ export type FileNode = FolderNode | FileNodeFile;
 
 export const TEST_FILES: FileNode[] = [
   {
-    name: "SALE CRADIT",
+    name: "SALE CREDIT",
     type: "folder",
     children: [
       {

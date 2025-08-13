@@ -27,14 +27,32 @@ export const ManualTestForm = ({
   selectedDataTableIndex?: number;
   setSelectedDataTableIndex?: React.Dispatch<React.SetStateAction<number>>;
   handleTableChange?:
-    | ((rowIndex: number, key: string, value: string) => void)
-    | undefined;
+  | ((rowIndex: number, key: string, value: string) => void)
+  | undefined;
   response?: RequestWithValidationResult | null;
   resetResponse: () => void;
 }) => {
   return (
     <div style={{ padding: 20 }}>
-      <h2>Sale Credit 56 Input</h2>
+      <div style={{ backgroundColor: "#ffffffff", borderRadius: 8 }}>
+        <div>
+          <p
+            className="title"
+            style={{
+              color: "#000000ff",
+              backgroundColor: "#ffdd1f",
+              paddingTop: 10,
+              paddingBottom: 10,
+              paddingLeft: 20,
+              fontSize: 20,
+              fontWeight: 700,
+              width: "95%",
+            }}
+          >
+            Input Command Data
+          </p>
+        </div>
+      </div>
       {response ? (
         <>
           <RunUnitTestResult
@@ -51,37 +69,42 @@ export const ManualTestForm = ({
             <button
               onClick={resetResponse}
               style={{
+                marginRight: "3%",
                 padding: "6px 12px",
-                backgroundColor: "#10b981",
+                backgroundColor: "#747474ff",
                 color: "white",
                 border: "none",
                 borderRadius: 4,
                 cursor: "pointer",
               }}
             >
-              Back to input
+              ◀ Back to input
             </button>
           </div>
         </>
       ) : (
         <>
-          <div style={{ display: "flex", gap: 40 }}>
-            <GenericForm fields={formFields} onChange={handleFormChange} />
-            {dataTable &&
-              selectedDataTableIndex !== undefined &&
-              setSelectedDataTableIndex &&
-              handleTableChange && (
-                <GenericTable
-                  columns={[
-                    { label: "D2", key: "D2" },
-                    { label: "D4", key: "D4" },
-                  ]}
-                  data={dataTable}
-                  selectedIndex={selectedDataTableIndex}
-                  onSelect={setSelectedDataTableIndex}
-                  onChange={handleTableChange}
-                />
-              )}
+          <div style={{ display: "flex", gap: 100, maxWidth: "90%" }}>
+            <div style={{ marginTop: 10, maxWidth: "50vh", fontFamily: "Arial, sans-serif", width: "50%", }}>
+              <GenericForm fields={formFields} onChange={handleFormChange} />
+            </div>
+            <div style={{marginTop: 40 , width: "100hv" , backgroundColor: "#fff", padding: 20, borderRadius: 8}}>
+              {dataTable &&
+                selectedDataTableIndex !== undefined &&
+                setSelectedDataTableIndex &&
+                handleTableChange && (
+                  <GenericTable
+                    columns={[
+                      { label: "D2", key: "D2" },
+                      { label: "D4", key: "D4" },
+                    ]}
+                    data={dataTable}
+                    selectedIndex={selectedDataTableIndex}
+                    onSelect={setSelectedDataTableIndex}
+                    onChange={handleTableChange}
+                  />
+                )}
+            </div>
           </div>
           <div
             style={{ marginTop: 20, display: "flex", justifyContent: "end" }}
@@ -89,6 +112,7 @@ export const ManualTestForm = ({
             <button
               onClick={handleSubmitForm}
               style={{
+                marginRight: "3%",
                 padding: "6px 12px",
                 backgroundColor: "#10b981",
                 color: "white",

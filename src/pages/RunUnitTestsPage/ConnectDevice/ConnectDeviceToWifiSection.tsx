@@ -45,7 +45,7 @@ export function ConnectDeviceToWifiSection() {
       <div
         style={{
           fontSize: 30,
-          fontWeight: 400,
+          fontWeight: 500,
           marginBottom: 10,
           cursor: "default",
           color: "white",
@@ -89,7 +89,7 @@ export function ConnectDeviceToWifiSection() {
             value={host}
             onChange={(e) => setHost(e.target.value)}
             style={{
-              width: "100%",
+              width: "250px",
               marginTop: 4,
               padding: "8px 10px",
               fontSize: 16,
@@ -121,7 +121,7 @@ export function ConnectDeviceToWifiSection() {
             value={port}
             onChange={(e) => setPort(Number(e.target.value))}
             style={{
-              width: "100%",
+              width: "250px",
               marginTop: 4,
               padding: "8px 10px",
               fontSize: 16,

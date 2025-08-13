@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import backgroundvideo from "../video/background2.mp4";
+import backgroundvideo from "../video/sea2.mp4";
 import { ConnectDeviceToCloudSection } from "./RunUnitTestsPage/ConnectDevice/ConnectDeviceToCloudSection";
 import { ConnectDeviceToWifiSection } from "./RunUnitTestsPage/ConnectDevice/ConnectDeviceToWifiSection";
 import { useNavigate } from "react-router-dom";
@@ -55,14 +55,14 @@ export default function HomePage() {
             className="title"
             style={{
               fontSize: 30,
-              fontWeight: 400,
+              fontWeight: 500,
               marginTop: 30,
               marginBottom: 20,
               color: "#fffdfdff",
               textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)",
             }}
           >
-            select testing type
+            Select Menu
           </p>
           <div
             style={{

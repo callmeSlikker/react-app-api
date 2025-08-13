@@ -372,7 +372,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
   };
 
   return (
-    <div style={{width: "100%"}}>
+    <div style={{width: "98%"}}>
       {results.length > 0 && (
         <div style={{ marginBottom: 20 }}>
           <button

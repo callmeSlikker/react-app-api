@@ -15,19 +15,19 @@ export default function Sale56_Input() {
       label: "MID",
       key: "mid",
       value: "000002200869253",
-      type: InputType.TEXT,
+      type: InputType.NUMBER,
     },
     tid_bbl: {
       label: "TID BBL",
       key: "tid_bbl",
-      value: "00000000",
-      type: InputType.TEXT,
+      value: "50118674",
+      type: InputType.NUMBER,
     },
     tid_unionpay: {
       label: "TID UNIONPAY",
       key: "tid_unionpay",
-      value: "00000000",
-      type: InputType.TEXT,
+      value: "25296696",
+      type: InputType.NUMBER,
     },
     amount: {
       label: "Amount",
@@ -82,7 +82,7 @@ export default function Sale56_Input() {
 
     const expectedResponse = {
       "detail.merchantID": mid,
-      "header.terminalID": tid_bbl || tid_unionpay,
+      "header.terminalID": [tid_bbl, tid_unionpay],
       "detail.cardIssuerName": card.D2,
       "detail.cardIssuerID": card.D4,
     };
