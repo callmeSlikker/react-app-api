@@ -15,19 +15,19 @@ export default function Sale64_Input() {
       label: "MID",
       key: "mid",
       value: "000002200869253",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     tid_qrc: {
       label: "TID QRC",
       key: "tid_qrc",
       value: "47848651",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     tid_promptpay: {
       label: "TID PROMPTPAY",
       key: "tid_promptpay",
       value: "47848651",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     amount: {
       label: "Amount",

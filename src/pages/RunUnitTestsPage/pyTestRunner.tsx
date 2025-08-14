@@ -315,12 +315,13 @@ export default function PyTestRunner() {
           className="title"
           style={{
             position: "fixed", // ✅ ตรึงไว้กับหน้าจอ
-            background: "#ffeaaeff",
-            borderTop: "2px solid #ffd000ff",
+            background: "#fde660ff",
+            borderTop: "2px solid #b49900ff",
             padding: "10px 20px",
             display: "flex",
             alignItems: "center",
             width: "100%",
+            height: 40,
             zIndex: 1000,
             bottom: 0,
             left: 0,
@@ -332,9 +333,8 @@ export default function PyTestRunner() {
               htmlFor="loopCount"
               style={{
                 margin: 5,
-                fontFamily: "revert-layer",
-                fontSize: 20,
-                fontWeight: 600,
+                fontSize: 18,
+                fontWeight: 700,
                 marginRight: 10,
               }}
             >
@@ -343,10 +343,10 @@ export default function PyTestRunner() {
             <input
               style={{
                 paddingLeft: 10,
-                height: 28,
-                width: 42,
-                border: "3px solid #0135a5ff",
-                borderRadius: 4,
+                height: 25,
+                width: 38,
+                border: "3px solid #59b19bff",
+                borderRadius: 8,
                 marginRight: 10,
               }}
               id="loopCount"
@@ -374,7 +374,7 @@ export default function PyTestRunner() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: "rgba(114, 190, 171, 1)",
+                backgroundColor: "#79f0d2ff",
                 color: "rgba(22, 58, 48, 1)",
                 borderRadius: 9,
                 cursor: "pointer",

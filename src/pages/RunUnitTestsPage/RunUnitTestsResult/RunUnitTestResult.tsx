@@ -372,7 +372,7 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
   };
 
   return (
-    <div style={{width: "98%"}}>
+    <div style={{ width: "98%", }}>
       {results.length > 0 && (
         <div style={{ marginBottom: 20 }}>
           <button
@@ -458,13 +458,20 @@ export const RunUnitTestResult = ({ results }: RunUnitTestsResultProps) => {
                     </p>
 
                     <div style={{ display: "flex", gap: 20 }}>
-                      <div style={{ flex: 1 }}>
+                      <div style={{ flex: 1 , width: "35%"}}>
                         <strong>Request:</strong>
                         <pre>{JSON.stringify(result.request, null, 2)}</pre>
                       </div>
-                      <div style={{ flex: 1 }}>
+                      <div style={{ flex: 1 , width: "60%"}}>
                         <strong>Response Body:</strong>
-                        <pre>
+                        <pre
+                          style={{
+                            whiteSpace: "pre-wrap",
+                            wordWrap: "break-word",
+                            overflowWrap: "break-word",
+                            overflowX: "auto",
+                            maxWidth: "100%"
+                          }}>
                           {JSON.stringify(
                             formatResponseBody(result.response.body),
                             null,

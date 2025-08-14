@@ -15,13 +15,13 @@ export default function Sale57_Input() {
       label: "MID",
       key: "mid",
       value: "000002200869253",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     tid_rabbit: {
       label: "TID Rabbit",
       key: "tid_rabbit",
       value: "99933468",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     amount: {
       label: "Amount",

@@ -15,19 +15,19 @@ export default function Sale56_Input() {
       label: "MID",
       key: "mid",
       value: "000002200869253",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     tid_bbl: {
       label: "TID BBL",
       key: "tid_bbl",
       value: "50118674",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     tid_unionpay: {
       label: "TID UNIONPAY",
       key: "tid_unionpay",
       value: "25296696",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     amount: {
       label: "Amount",

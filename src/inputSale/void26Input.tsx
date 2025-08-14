@@ -13,7 +13,7 @@ export default function Void26_Input() {
       label: "Trace",
       key: "trace",
       value: "000000",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
   });
 
@@ -23,7 +23,7 @@ export default function Void26_Input() {
 
   const handleSubmit = async () => {
     const traceStr = formFields["trace"].value;
-    const traceValue = parseFloat(
+    const invoiceTraceNumber = parseFloat(
       typeof traceStr === "string" ? traceStr : String(traceStr)
     );
 
@@ -37,7 +37,7 @@ export default function Void26_Input() {
           endPointNamespace: "com.pax.edc.bpsp",
         },
         detail: {
-          trace,
+          invoiceTraceNumber: trace,
         },
       },
     }

@@ -47,6 +47,42 @@ export default function HistoriesPage() {
     setCurrentPage(newPage);
   };
 
+  const downloadHistoriesCSV = () => {
+    if (!histories || histories.length === 0) {
+      alert("No histories to export");
+      return;
+    }
+
+    let csvContent = `Date,Function,Request,Code,Response Body,Success,Error\n`;
+
+    histories.forEach((entry) => {
+      const date = entry.date;
+      const func = entry.function || "";
+      const request = JSON.stringify(entry.request).replace(/"/g, '""');
+      const code = entry.response.code ?? "";
+      const body = JSON.stringify(entry.response.body).replace(/"/g, '""');
+      const success = (entry.success || []).join(" | ").replace(/"/g, '""');
+      const error = (entry.error || []).join(" | ").replace(/"/g, '""');
+
+      csvContent += `"${date}","${func}","${request}","${code}","${body}","${success}","${error}"\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      activeTab === HISTORY_STORAGE_KEY.MANUAL_HISTORIES
+        ? "manual_histories.csv"
+        : "auto_histories.csv"
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
       {/* Back button */}
@@ -95,8 +131,8 @@ export default function HistoriesPage() {
         <div
           style={{
             display: "flex",
-            gap: 10,
-            marginBottom: 20,
+            gap: 20,
+            margin: 20,
             justifyContent: "center",
           }}
         >
@@ -110,14 +146,16 @@ export default function HistoriesPage() {
                 setActiveTab(tab.key);
                 setCurrentPage(1);
               }}
+              className="title"
               style={{
                 padding: "10px 20px",
-                borderRadius: 8,
-                border: "2px solid #007ACC",
+                borderRadius: 20,
+                border: "3px solid #184fa3ff",
                 backgroundColor:
-                  activeTab === tab.key ? "#007ACC" : "#ffffffff",
-                color: activeTab === tab.key ? "white" : "#007ACC",
+                  activeTab === tab.key ? "#184fa3ff" : "#ffffffff",
+                color: activeTab === tab.key ? "white" : "#184fa3ff",
                 fontWeight: "700",
+                fontSize: 16,
                 cursor: "pointer",
                 transition: "all 0.25s ease",
               }}
@@ -169,6 +207,23 @@ export default function HistoriesPage() {
           />
         </div>
 
+        <div style={{ marginBottom: 20, textAlign: "left" }}>
+          <button
+            onClick={downloadHistoriesCSV}
+            style={{
+              backgroundColor: "#004a99",
+              color: "white",
+              padding: "8px 16px",
+              border: "none",
+              borderRadius: 4,
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Result test (.csv)
+          </button>
+        </div>
+
         {/* History table */}
         <div
           style={{
@@ -194,7 +249,7 @@ export default function HistoriesPage() {
               <tr
                 style={{
                   background:
-                    "linear-gradient(90deg, #007ACC 0%, #005f99 100%)",
+                    "linear-gradient(90deg, #005ec2ff 0%, #004a99 100%)",
                   color: "white",
                   fontWeight: "700",
                   fontSize: 16,
@@ -248,8 +303,8 @@ export default function HistoriesPage() {
                   typeof entry.response.code === "number"
                     ? entry.response.code
                     : typeof entry.response.code === "string"
-                    ? parseInt(entry.response.code, 10)
-                    : NaN;
+                      ? parseInt(entry.response.code, 10)
+                      : NaN;
 
                 const isSuccess =
                   !isNaN(codeNumber) && codeNumber >= 200 && codeNumber < 300;
@@ -267,8 +322,8 @@ export default function HistoriesPage() {
                       (e.currentTarget.style.backgroundColor = "#e6f0fc")
                     }
                     onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor =
-                        i % 2 === 0 ? "#fefefe" : "#f4f8fc")
+                    (e.currentTarget.style.backgroundColor =
+                      i % 2 === 0 ? "#fefefe" : "#f4f8fc")
                     }
                   >
                     <td
@@ -392,11 +447,17 @@ export default function HistoriesPage() {
             gap: 18,
           }}
         >
-          <button onClick={() => onPageChange(currentPage - 1)}>Prev</button>
+          <button onClick={() => onPageChange(currentPage - 1)}
+            style={{ height: 40, width: 60, backgroundColor: "#007ACC", color: "white", border: "none", borderRadius: 50, cursor: "pointer" }}
+          >
+            Prev</button>
           <span>
             Page {totalPages === 0 ? 0 : currentPage} of {totalPages}
           </span>
-          <button onClick={() => onPageChange(currentPage + 1)}>Next</button>
+          <button onClick={() => onPageChange(currentPage + 1)}
+            style={{ height: 40, width: 60, backgroundColor: "#007ACC", color: "white", border: "none", borderRadius: 50, cursor: "pointer" }}
+          >
+            Next</button>
         </div>
       </div>
     </div>

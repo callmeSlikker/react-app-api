@@ -7,24 +7,43 @@ import { useManualTestForm } from "./hooks/useManualTestForm";
 import { useGenericForm } from "../common/form/hooks/useGenericForm";
 import { ManualTestForm } from "./generic/ManualTestForm";
 
+export enum QR_TYPES {
+  QR_CREDIT = "01",
+  QR_WALLET = "02",
+  QR_LINEPAY = "03",
+}
+
 export default function InquiryIQ_Input() {
   const [formFields, setFormFields] = useState<GenericFormFields>({
     trace: {
       label: "Trace",
       key: "trace",
       value: "000000",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
+    },
+    qrType: {
+      label: "QR Type",
+      key: "qrType",
+      value: "01",
+      type: InputType.SELECT,
+      options: Object.entries(QR_TYPES).map(([key, value]) => ({
+        label: key,
+        value: value,
+      })),
     },
   });
 
   const [selectedInquiryIndex, setSelectedInquiryIndex] = useState(0);
   const { handleSubmitForm, response, resetResponse } = useManualTestForm();
-  const name = "Inquiry IQ command";
-  
+  const name = "Inruiry IQ command";
+
   const handleSubmit = async () => {
+    const traceStr = formFields["trace"].value;
+    const invoiceTraceNumber = parseFloat(
+      typeof traceStr === "string" ? traceStr : String(traceStr)
+    );
 
     const trace = formFields["trace"].value;
-
 
     const payload = {
       CATEGORY: "com.pax.payment.Inquiry",
@@ -34,10 +53,12 @@ export default function InquiryIQ_Input() {
           endPointNamespace: "com.pax.edc.bpsp",
         },
         detail: {
-          trace,
+          invoiceTraceNumber: trace,
+          QRType: formFields["qrType"].value,
         },
       },
-    };
+    }
+
 
     const expectedResponse = {
       "detail.invoiceTraceNumber": trace,
@@ -53,6 +74,7 @@ export default function InquiryIQ_Input() {
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+
   };
 
   return (
@@ -68,3 +90,4 @@ export default function InquiryIQ_Input() {
     />
   );
 }
+

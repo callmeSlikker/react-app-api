@@ -15,13 +15,13 @@ export default function Sale79_Input() {
       label: "MID",
       key: "mid",
       value: "000002200869253",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     tid_linepay: {
       label: "TID LinePay",
       key: "tid_linepay",
       value: "99933468",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     amount: {
       label: "Amount",

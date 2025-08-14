@@ -15,7 +15,7 @@ export default function RequestQR_Input() {
     amount: {
       label: "Amount",
       key: "amount",
-      value: "1",
+      value: "1.00",
       type: InputType.NUMBER,
     },
     qrType: {
@@ -30,7 +30,7 @@ export default function RequestQR_Input() {
     },
   });
 
-  const [selectedVoidIndex, setSelectedVoidIndex] = useState(0);
+  const [selectedRequestQRIndex, setSelectedRequestQRIndex] = useState(0);
   const { handleSubmitForm, response, resetResponse } = useManualTestForm();
   const name = "Request QR command";
 
@@ -38,7 +38,7 @@ export default function RequestQR_Input() {
     const amountValue = Number(formFields["amount"].value);
 
     const payload = {
-      CATEGORY: "com.pax.payment.Void",
+      CATEGORY: "com.pax.payment.RequestQR",
       parm: {
         header: {
           formatVersion: "1",
@@ -52,7 +52,6 @@ export default function RequestQR_Input() {
     };
 
     const expectedResponse = {
-      "detail.amountValue": amountValue,
       "detail.QRType": formFields["qrType"].value,
     };
 
@@ -73,8 +72,8 @@ export default function RequestQR_Input() {
       formFields={formFields}
       handleFormChange={useGenericForm(setFormFields)}
       handleSubmitForm={handleSubmit}
-      selectedDataTableIndex={selectedVoidIndex}
-      setSelectedDataTableIndex={setSelectedVoidIndex}
+      selectedDataTableIndex={selectedRequestQRIndex}
+      setSelectedDataTableIndex={setSelectedRequestQRIndex}
       response={response}
       resetResponse={resetResponse}
       name={name}

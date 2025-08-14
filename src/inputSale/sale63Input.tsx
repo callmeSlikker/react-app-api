@@ -15,13 +15,13 @@ export default function Sale63_Input() {
       label: "MID",
       key: "mid",
       value: "000002200869253",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     tid_wallet: {
       label: "TID Wallet",
       key: "tid_qrc",
       value: "48831204",
-      type: InputType.NUMBER,
+      type: InputType.TEXT,
     },
     amount: {
       label: "Amount",
