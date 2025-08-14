@@ -183,7 +183,7 @@ export default function HistoriesPage() {
               color: "#004a99",
             }}
           >
-            Search by Thai Date (YYYY-MM-DD) :
+            Search by Date (YYYY-MM-DD) :
           </label>
           <input
             id="searchDate"
