@@ -34,7 +34,28 @@ export default function ManualTest() {
     ];
 
     return (
-        <div>
+        <div
+            style={{
+                maxWidth: "88%",
+                margin: "30px auto",
+                padding: "30px 24px",
+                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                backgroundColor: "#ffffffff",
+                borderRadius: 12,
+                boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                color: "#333",
+            }}>
+            <div
+                style={{
+                    fontSize: 42,
+                    fontWeight: 800,
+                    marginBottom: 10,
+                    textAlign: "center",
+                    color: "#284a7eff",
+                }}
+            >
+                MANUAL TESTS
+            </div>
             {/* ปุ่ม back */}
             <button
                 className="title"
@@ -67,7 +88,7 @@ export default function ManualTest() {
                 <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
                     <div>
                         {/* ไอคอน + สถานะ */}
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <div style={{ display: "flex", alignItems: "left" }}>
                             <img
                                 src={testertoolicon}
                                 style={{ width: 150, height: 150, objectFit: "contain" }}
@@ -77,9 +98,8 @@ export default function ManualTest() {
                                 <ul
                                     style={{
                                         display: "flex",
-                                        justifyContent: "left",
+                                        justifyContent: "flex-start",
                                         gap: 15,
-                                        margin: 0,
                                     }}
                                 >
                                     {/* Cloud */}
@@ -236,14 +256,14 @@ export default function ManualTest() {
                     <p
                         className="title"
                         style={{
-                            fontSize: 42,
-                            fontWeight: 800,
+                            fontSize: 30,
+                            fontWeight: 700,
+                            fontFamily: "revert-layer",
+                            marginLeft: 0,
                             marginBottom: 10,
-                            textAlign: "center",
-                            color: "#284a7eff",
                         }}
                     >
-                        Manual Test
+                        REQUEST / RESPONSE
                     </p>
 
                     {/* input Sale Credit 56 */}

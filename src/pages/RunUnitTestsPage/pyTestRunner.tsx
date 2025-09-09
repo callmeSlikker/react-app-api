@@ -75,7 +75,28 @@ export default function PyTestRunner() {
   const isRunningTets = runTestsMutation.isPending;
 
   return (
-    <div>
+    <div
+      style={{
+        maxWidth: "88%",
+        margin: "30px auto",
+        padding: "30px 24px",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        backgroundColor: "#ffffffff",
+        borderRadius: 12,
+        boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+        color: "#333",
+      }}>
+      <div
+        style={{
+          fontSize: 42,
+          fontWeight: 800,
+          marginBottom: 10,
+          textAlign: "center",
+          color: "#284a7eff",
+        }}
+      >
+        AUTOMATE TESTS
+      </div>
       <button
         className="title"
         onClick={() => navigate("/")}
@@ -255,6 +276,85 @@ export default function PyTestRunner() {
                   />
                 </div>
               </div>
+              <div>
+                <div style={{ margin: "10px" }}>
+                  <label
+                    htmlFor="loopCount"
+                    style={{
+                      margin: 5,
+                      fontSize: 18,
+                      fontWeight: 700,
+                      marginRight: 10,
+                    }}
+                  >
+                    Loop count :
+                  </label>
+                  <input
+                    style={{
+                      paddingLeft: 10,
+                      height: 25,
+                      width: 38,
+                      border: "3px solid #59b19bff",
+                      borderRadius: 8,
+                      marginRight: 10,
+                    }}
+                    id="loopCount"
+                    type="number"
+                    min="1"
+                    value={loopCount}
+                    onChange={(e) => setLoopCount(Number(e.target.value))}
+                  />
+                </div>
+
+                <div
+                  className="title"
+                  style={{
+                    display: "flex",
+                    alignContent: "center",
+                    gap: 20,
+                  }}
+                >
+                  <button
+                    onClick={() => runTestsMutation.mutate()}
+                    disabled={isRunningTets}
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 800,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#79f0d2ff",
+                      color: "rgba(22, 58, 48, 1)",
+                      borderRadius: 9,
+                      cursor: "pointer",
+                      height: 35,
+                      width: 200,
+                      textAlign: "center",
+                      border: "3px solid #2b463fff",
+                    }}
+                  >
+                    START
+                  </button>
+
+                  <button
+                    onClick={reset}
+                    disabled={isRunningTets}
+                    style={{
+                      backgroundColor: "#8c8d8dff",
+                      color: "white",
+                      border: "none",
+                      borderRadius: 4,
+                      fontSize: 16,
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      width: 80,
+                      height: 35,
+                    }}
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -311,101 +411,6 @@ export default function PyTestRunner() {
           </div>
         </div>
 
-        <div
-          className="title"
-          style={{
-            position: "fixed", // ✅ ตรึงไว้กับหน้าจอ
-            background: "#fde660ff",
-            borderTop: "2px solid #b49900ff",
-            padding: "10px 20px",
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
-            height: 40,
-            zIndex: 1000,
-            bottom: 0,
-            left: 0,
-            marginTop: 0,
-          }}
-        >
-          <div style={{ margin: "10px" }}>
-            <label
-              htmlFor="loopCount"
-              style={{
-                margin: 5,
-                fontSize: 18,
-                fontWeight: 700,
-                marginRight: 10,
-              }}
-            >
-              Loop count :
-            </label>
-            <input
-              style={{
-                paddingLeft: 10,
-                height: 25,
-                width: 38,
-                border: "3px solid #59b19bff",
-                borderRadius: 8,
-                marginRight: 10,
-              }}
-              id="loopCount"
-              type="number"
-              min="1"
-              value={loopCount}
-              onChange={(e) => setLoopCount(Number(e.target.value))}
-            />
-          </div>
-
-          <div
-            className="title"
-            style={{
-              display: "flex",
-              alignContent: "center",
-              gap: 20,
-            }}
-          >
-            <button
-              onClick={() => runTestsMutation.mutate()}
-              disabled={isRunningTets}
-              style={{
-                fontSize: 18,
-                fontWeight: 800,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#79f0d2ff",
-                color: "rgba(22, 58, 48, 1)",
-                borderRadius: 9,
-                cursor: "pointer",
-                height: 35,
-                width: 200,
-                textAlign: "center",
-                border: "3px solid #2b463fff",
-              }}
-            >
-              START
-            </button>
-
-            <button
-              onClick={reset}
-              disabled={isRunningTets}
-              style={{
-                backgroundColor: "#8c8d8dff",
-                color: "white",
-                border: "none",
-                borderRadius: 4,
-                fontSize: 16,
-                fontWeight: 500,
-                cursor: "pointer",
-                width: 80,
-                height: 35,
-              }}
-            >
-              Reset
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
