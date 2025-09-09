@@ -210,7 +210,7 @@ export default function ManualTest() {
                                                         width: 25,
                                                         height: 25,
                                                         borderRadius: "50%",
-                                                        backgroundColor: "#ffdd1f",
+                                                        backgroundColor: "#284a7eff",
                                                         flexShrink: 0,
                                                     }}
                                                 />
@@ -236,14 +236,14 @@ export default function ManualTest() {
                     <p
                         className="title"
                         style={{
-                            fontSize: 30,
-                            fontWeight: 700,
-                            fontFamily: "revert-layer",
-                            marginLeft: 0,
+                            fontSize: 42,
+                            fontWeight: 800,
                             marginBottom: 10,
+                            textAlign: "center",
+                            color: "#284a7eff",
                         }}
                     >
-                        INPUT DATA
+                        Manual Test
                     </p>
 
                     {/* input Sale Credit 56 */}

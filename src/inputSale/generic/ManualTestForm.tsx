@@ -39,8 +39,8 @@ export const ManualTestForm = ({
           <p
             className="title"
             style={{
-              color: "#000000ff",
-              backgroundColor: "#ffdd1f",
+              color: "#213d68ff",
+              backgroundColor: "#afd6ffff",
               paddingTop: 10,
               paddingBottom: 10,
               paddingLeft: 20,

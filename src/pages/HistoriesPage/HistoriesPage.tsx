@@ -248,8 +248,7 @@ export default function HistoriesPage() {
             <thead>
               <tr
                 style={{
-                  background:
-                    "linear-gradient(90deg, #005ec2ff 0%, #004a99 100%)",
+                  background: "linear-gradient(90deg, #005ec2ff 0%, #004a99 100%)",
                   color: "white",
                   fontWeight: "700",
                   fontSize: 16,
@@ -259,6 +258,7 @@ export default function HistoriesPage() {
                 }}
               >
                 {[
+                  "No.", // คอลัมน์ใหม่สำหรับลำดับ
                   "Date and Time",
                   "Function",
                   "Request",
@@ -283,8 +283,7 @@ export default function HistoriesPage() {
             <tbody>
               {pageData.length === 0 && (
                 <tr>
-                  <td
-                    colSpan={7}
+                  <td colSpan={8} // เดิม 7 → เพิ่มเป็น 8
                     style={{
                       padding: 30,
                       textAlign: "center",
@@ -329,10 +328,9 @@ export default function HistoriesPage() {
                     <td
                       style={{
                         padding: "16px 20px",
-                        whiteSpace: "nowrap",
-                        fontSize: 12,
-                        fontWeight: "300",
-                        color: "#000000ff",
+                        textAlign: "center",
+                        fontWeight: "600",
+                        color: "#000000",
                       }}
                       title={entry.date}
                     >
