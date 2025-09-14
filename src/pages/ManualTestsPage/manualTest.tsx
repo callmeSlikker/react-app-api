@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import testertoolicon from "../../pic/testertoolicon.png";
 import { useConnectionStore } from "../RunUnitTestsPage/ConnectDevice/store/useConnectionStore";
 import { useState } from "react";
 import Sale56_Input from "../../inputSale/sale56Input";
@@ -90,7 +89,7 @@ export default function ManualTest() {
                         {/* ไอคอน + สถานะ */}
                         <div style={{ display: "flex", alignItems: "left" }}>
                             <img
-                                src={testertoolicon}
+                                src={"/testertoolicon.png"}
                                 style={{ width: 150, height: 150, objectFit: "contain" }}
                                 alt="icon"
                             />

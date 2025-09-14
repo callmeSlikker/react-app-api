@@ -4,12 +4,13 @@ import Swal from "sweetalert2";
 import { useConnectionStore } from "./store/useConnectionStore";
 
 export function ConnectDeviceToWifiSection() {
-  const setWifiConnected = useConnectionStore((state) => state.setWifiConnected);
+  const setWifiConnected = useConnectionStore(
+    (state) => state.setWifiConnected
+  );
   const [host, setHost] = useState("000.000.000.000");
   const [port, setPort] = useState(30999);
   const [connectSuccess, setConnectSuccess] = useState(false);
   const [connectFailed, setConnectFailed] = useState(false); // เพิ่ม state
-
 
   const connectToDevice = async () => {
     try {
@@ -19,7 +20,11 @@ export function ConnectDeviceToWifiSection() {
       });
       const data = res.data;
 
-      if (res.status === 200 && data.resultCode === "200" && data.message === "connect success") {
+      if (
+        res.status === 200 &&
+        data.resultCode === "200" &&
+        data.message === "connect success"
+      ) {
         setConnectSuccess(true);
         setConnectFailed(false);
         setWifiConnected(true); // ✅
@@ -47,11 +52,9 @@ export function ConnectDeviceToWifiSection() {
           fontSize: 30,
           fontWeight: 500,
           marginBottom: 10,
-          cursor: "default",
-          color: "white",
-          fontFamily: "inherit",
           textAlign: "center",
-          textShadow: "5px 5px 8px rgba(0, 0, 0, 0.8)"
+          color: "#284a7eff",
+          cursor: "default",
         }}
       >
         Wifi Connect
@@ -64,7 +67,7 @@ export function ConnectDeviceToWifiSection() {
           border: "1px solid #d1d5db",
           borderRadius: 10,
           background: "#f9fafb",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 1)",
+          boxShadow: "0 2px 8px rgba(0, 44, 94, 0.66)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -143,8 +146,8 @@ export function ConnectDeviceToWifiSection() {
             background: connectSuccess
               ? "#16a34a" // เขียวสำเร็จ
               : connectFailed
-                ? "#dc2626" // แดงล้มเหลว
-                : "#d3d7d8ff", // สีเริ่มต้น
+              ? "#dc2626" // แดงล้มเหลว
+              : "#d3d7d8ff", // สีเริ่มต้น
             color: connectSuccess || connectFailed ? "white" : "black",
             border: "none",
             borderRadius: 4,
@@ -158,8 +161,8 @@ export function ConnectDeviceToWifiSection() {
           {connectSuccess
             ? "Connected"
             : connectFailed
-              ? "Connect Failed"
-              : "Connect to Device"}
+            ? "Connect Failed"
+            : "Connect to Device"}
         </button>
       </div>
     </div>

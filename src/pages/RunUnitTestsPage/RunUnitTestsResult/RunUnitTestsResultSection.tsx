@@ -4,12 +4,12 @@ import LoadingIndicator from "../../../common/LoadingIndicator";
 
 interface RunUnitTestsResultSectionProps {
   results: UnitTestResult[][];
-  isRunningTets: boolean;
+  isRunningSuccess: boolean;
 }
 
 export function RunUnitTestsResultSection({
   results,
-  isRunningTets,
+  isRunningSuccess,
 }: RunUnitTestsResultSectionProps) {
   const [openLoops, setOpenLoops] = useState<Record<number, boolean>>({});
 
@@ -29,18 +29,22 @@ export function RunUnitTestsResultSection({
   };
 
   return (
-    <div
-      style={{
-        overflowY: "auto",
-        maxHeight: "86%",
-        paddingBottom: 10,
-        paddingLeft: 20,
-      }}
-    >
-      {isRunningTets ? (
-        <LoadingIndicator />
+    <>
+      {(!isRunningSuccess || !results.length) ? (
+        <img
+          src={"/waiting_transaction.jpg"}
+          style={{ width: "85%", height: "auto", objectFit: "contain" }}
+          alt="LoadTransaction"
+        />
       ) : (
-        <>
+        <div
+          style={{
+            overflowY: "auto",
+            maxHeight: "65vh",
+            paddingBottom: 10,
+            paddingLeft: 20,
+          }}
+        >
           {results?.map((eachLoopResults, index) => (
             <Fragment key={index}>
               {/* Clickable Loop Header */}
@@ -60,14 +64,12 @@ export function RunUnitTestsResultSection({
 
               {/* Show content only if opened */}
               {openLoops[index] && (
-                <RunUnitTestResult
-                  results={eachLoopResults}
-                />
+                <RunUnitTestResult results={eachLoopResults} />
               )}
             </Fragment>
           ))}
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 }

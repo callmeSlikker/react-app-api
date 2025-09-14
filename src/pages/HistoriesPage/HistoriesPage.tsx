@@ -26,14 +26,31 @@ export default function HistoriesPage() {
       ? manualHistory.histories
       : autoHistory.histories;
 
-  const [searchDate, setSearchDate] = useState("");
+  const [startDate, setStartDate] = useState(""); // YYYY-MM-DD
+  const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
-  // Filter by date substring
+  const toggleRow = (index: number) => {
+    setExpandedRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) newSet.delete(index);
+      else newSet.add(index);
+      return newSet;
+    });
+  };
+
+  // Filter by start and end date
   const filteredHistories = useMemo(() => {
-    if (!searchDate.trim()) return histories;
-    return histories.filter((h) => h.date.includes(searchDate.trim()));
-  }, [histories, searchDate]);
+    return histories.filter((h) => {
+      const historyDate = h.date.split(" ")[0]; // assuming ISO format
+      if (startDate && historyDate < startDate) return false;
+      if (endDate && historyDate > endDate) return false;
+      return true;
+    });
+  }, [histories, startDate, endDate]);
+
+  console.log("filteredHistoriesasdf", filteredHistories)
 
   // Pagination
   const totalPages = Math.ceil(filteredHistories.length / ITEMS_PER_PAGE);
@@ -165,7 +182,7 @@ export default function HistoriesPage() {
           ))}
         </div>
 
-        {/* Search bar */}
+        {/* Date filters */}
         <div
           style={{
             marginBottom: 30,
@@ -175,34 +192,43 @@ export default function HistoriesPage() {
             gap: 12,
           }}
         >
-          <label
-            htmlFor="searchDate"
-            style={{
-              fontWeight: 700,
-              fontSize: 16,
-              color: "#004a99",
-            }}
-          >
-            Search by Date (YYYY-MM-DD) :
+          <label style={{ fontWeight: 700, fontSize: 16, color: "#004a99" }}>
+            Start Date:
           </label>
           <input
-            id="searchDate"
-            type="text"
-            placeholder="2025-08-12"
-            value={searchDate}
+            type="date"
+            value={startDate}
             onChange={(e) => {
-              setSearchDate(e.target.value);
+              setStartDate(e.target.value);
               setCurrentPage(1);
             }}
             style={{
               color: "#505050ff",
               fontSize: 14,
-              padding: "10px 16px",
+              padding: "6px 10px",
               borderRadius: 10,
               border: "2px solid #004a99",
-              width: 150,
               outline: "none",
-              transition: "border-color 0.25s ease",
+            }}
+          />
+
+          <label style={{ fontWeight: 700, fontSize: 16, color: "#004a99" }}>
+            End Date:
+          </label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => {
+              setEndDate(e.target.value);
+              setCurrentPage(1);
+            }}
+            style={{
+              color: "#505050ff",
+              fontSize: 14,
+              padding: "6px 10px",
+              borderRadius: 10,
+              border: "2px solid #004a99",
+              outline: "none",
             }}
           />
         </div>
@@ -248,17 +274,16 @@ export default function HistoriesPage() {
             <thead>
               <tr
                 style={{
-                  background: "linear-gradient(90deg, #005ec2ff 0%, #004a99 100%)",
+                  background:
+                    "linear-gradient(90deg, #005ec2ff 0%, #004a99 100%)",
                   color: "white",
                   fontWeight: "700",
                   fontSize: 16,
                   textAlign: "left",
-                  letterSpacing: "0.02em",
-                  userSelect: "none",
                 }}
               >
                 {[
-                  "No.", // คอลัมน์ใหม่สำหรับลำดับ
+                  "No.",
                   "Date and Time",
                   "Function",
                   "Request",
@@ -272,7 +297,6 @@ export default function HistoriesPage() {
                     style={{
                       padding: "16px 20px",
                       whiteSpace: "nowrap",
-                      boxShadow: "inset 0 -2px 3px rgba(0,0,0,0.15)",
                     }}
                   >
                     {header}
@@ -283,7 +307,8 @@ export default function HistoriesPage() {
             <tbody>
               {pageData.length === 0 && (
                 <tr>
-                  <td colSpan={8} // เดิม 7 → เพิ่มเป็น 8
+                  <td
+                    colSpan={8}
                     style={{
                       padding: 30,
                       textAlign: "center",
@@ -297,14 +322,13 @@ export default function HistoriesPage() {
               )}
 
               {pageData.map((entry: HistoryProps, i) => {
-                // Safely parse code to number (if possible)
+                const isExpanded = expandedRows.has(i);
                 const codeNumber =
                   typeof entry.response.code === "number"
                     ? entry.response.code
                     : typeof entry.response.code === "string"
-                      ? parseInt(entry.response.code, 10)
-                      : NaN;
-
+                    ? parseInt(entry.response.code, 10)
+                    : NaN;
                 const isSuccess =
                   !isNaN(codeNumber) && codeNumber >= 200 && codeNumber < 300;
 
@@ -313,119 +337,96 @@ export default function HistoriesPage() {
                     key={i}
                     style={{
                       backgroundColor: i % 2 === 0 ? "#fefefe" : "#f4f8fc",
-                      verticalAlign: "top",
-                      transition: "background-color 0.2s ease",
-                      cursor: "default",
+                      cursor: "pointer",
                     }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = "#e6f0fc")
-                    }
-                    onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      i % 2 === 0 ? "#fefefe" : "#f4f8fc")
-                    }
+                    onClick={() => toggleRow(i)}
                   >
                     <td
                       style={{
-                        padding: "16px 20px",
+                        padding: "16px",
                         textAlign: "center",
-                        fontWeight: "600",
-                        color: "#000000",
+                        fontWeight: 600,
                       }}
-                      title={entry.date}
+                    >
+                      {i + 1}
+                    </td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        textAlign: "center",
+                        fontWeight: 600,
+                      }}
                     >
                       {entry.date}
                     </td>
-
                     <td
                       style={{
-                        width: "9%",
-                        padding: "16px 20px",
-                        fontSize: 12,
-                        fontWeight: "600",
+                        padding: "16px",
+                        fontWeight: 600,
                         color: "#004a99",
                       }}
-                      title={entry.function}
                     >
                       {entry.function}
                     </td>
-
                     <td
                       style={{
-                        width: "30%",
-                        padding: "16px 20px",
-                        fontSize: 12,
-                        fontWeight: "300",
-                        overflowX: "auto",
+                        padding: "16px",
                         fontFamily: "'Roboto Mono', monospace",
-                        whiteSpace: "pre-wrap",
-                        color: "#000000ff",
-                        userSelect: "text",
+                        whiteSpace: isExpanded ? "pre-wrap" : "nowrap",
+                        overflow: isExpanded ? "visible" : "hidden",
+                        textOverflow: isExpanded ? "clip" : "ellipsis",
+                        maxWidth: isExpanded ? "auto" : 200,
                       }}
-                      title={JSON.stringify(entry.request)}
+                      title={isExpanded ? "" : JSON.stringify(entry.request)}
                     >
-                      {JSON.stringify(entry.request, null, 2)}
+                      {isExpanded
+                        ? JSON.stringify(entry.request, null, 2)
+                        : JSON.stringify(entry.request)}
                     </td>
-
                     <td
                       style={{
-                        padding: "16px 20px",
+                        padding: "16px",
                         textAlign: "center",
-                        fontSize: 12,
-                        fontWeight: "600",
                         color: isSuccess ? "#238636" : "#b91c1c",
                       }}
-                      title={`Response code: ${entry.response.code ?? "-"}`}
                     >
                       {entry.response.code ?? "-"}
                     </td>
-
                     <td
                       style={{
-                        width: "40%",
-                        padding: "16px 20px",
-                        fontSize: 12,
-                        fontWeight: "300",
-                        overflowX: "auto",
+                        padding: "16px",
                         fontFamily: "'Roboto Mono', monospace",
-                        whiteSpace: "pre-wrap",
-                        color: "#000000ff",
-                        userSelect: "text",
+                        whiteSpace: isExpanded ? "pre-wrap" : "nowrap",
+                        overflow: isExpanded ? "visible" : "hidden",
+                        textOverflow: isExpanded ? "clip" : "ellipsis",
+                        maxWidth: isExpanded ? "auto" : 200,
                       }}
-                      title={JSON.stringify(entry.response.body)}
                     >
-                      {JSON.stringify(entry.response.body, null, 2)}
+                      {isExpanded
+                        ? JSON.stringify(entry.response.body, null, 2)
+                        : JSON.stringify(entry.response.body)}
                     </td>
-
                     <td
                       style={{
-                        padding: "16px 20px",
+                        padding: "16px",
                         color: "#2f855a",
-                        maxWidth: 250,
-                        whiteSpace: "pre-wrap",
-                        fontSize: 12,
-                        fontWeight: "600",
-                        userSelect: "text",
+                        fontWeight: 600,
                       }}
-                      title={entry.success?.join("\n") ?? ""}
                     >
-                      {entry.success?.join("\n") ?? "-"}
+                      {isExpanded
+                        ? entry.success?.join("\n")
+                        : entry.success?.join(" | ")}
                     </td>
-
                     <td
                       style={{
-                        width: "15%",
-                        padding: "16px 20px",
+                        padding: "16px",
                         color: "#c53030",
-                        maxWidth: 250,
-                        whiteSpace: "pre-wrap",
-                        fontSize: 12,
-                        fontWeight: "600",
-                        userSelect: "text",
+                        fontWeight: 600,
                       }}
-                      title={entry.error?.join("\n") ?? ""}
                     >
-                      {entry.error?.join("\n") ?? "-"}
+                      {isExpanded
+                        ? entry.error?.join("\n")
+                        : entry.error?.join(" | ")}
                     </td>
                   </tr>
                 );
@@ -433,7 +434,6 @@ export default function HistoriesPage() {
             </tbody>
           </table>
         </div>
-        {/* keep your existing table rendering here, using `pageData` */}
 
         {/* Pagination */}
         <div
@@ -445,17 +445,37 @@ export default function HistoriesPage() {
             gap: 18,
           }}
         >
-          <button onClick={() => onPageChange(currentPage - 1)}
-            style={{ height: 40, width: 60, backgroundColor: "#007ACC", color: "white", border: "none", borderRadius: 50, cursor: "pointer" }}
+          <button
+            onClick={() => onPageChange(currentPage - 1)}
+            style={{
+              height: 40,
+              width: 60,
+              backgroundColor: "#007ACC",
+              color: "white",
+              border: "none",
+              borderRadius: 50,
+              cursor: "pointer",
+            }}
           >
-            Prev</button>
+            Prev
+          </button>
           <span>
             Page {totalPages === 0 ? 0 : currentPage} of {totalPages}
           </span>
-          <button onClick={() => onPageChange(currentPage + 1)}
-            style={{ height: 40, width: 60, backgroundColor: "#007ACC", color: "white", border: "none", borderRadius: 50, cursor: "pointer" }}
+          <button
+            onClick={() => onPageChange(currentPage + 1)}
+            style={{
+              height: 40,
+              width: 60,
+              backgroundColor: "#007ACC",
+              color: "white",
+              border: "none",
+              borderRadius: 50,
+              cursor: "pointer",
+            }}
           >
-            Next</button>
+            Next
+          </button>
         </div>
       </div>
     </div>

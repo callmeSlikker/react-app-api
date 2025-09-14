@@ -6,9 +6,11 @@ import FileTreeView from "./FileTest/FileTreeView";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { FileNodeFile, TEST_FILES } from "../../tests/test";
 import { RequestWithValidationResult } from "../../tests/requestWithValidation";
-import testertoolicon from "../../pic/testertoolicon.png";
 import { useConnectionStore } from "./ConnectDevice/store/useConnectionStore";
-import { HISTORY_STORAGE_KEY, useTestHistory } from "../../inputSale/hooks/useTestHistory";
+import {
+  HISTORY_STORAGE_KEY,
+  useTestHistory,
+} from "../../inputSale/hooks/useTestHistory";
 
 export type SelectedFile = {
   fileName: string;
@@ -72,7 +74,7 @@ export default function PyTestRunner() {
     });
   };
 
-  const isRunningTets = runTestsMutation.isPending;
+  const isRunningSuccess = runTestsMutation.isSuccess;
 
   return (
     <div
@@ -85,7 +87,8 @@ export default function PyTestRunner() {
         borderRadius: 12,
         boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
         color: "#333",
-      }}>
+      }}
+    >
       <div
         style={{
           fontSize: 42,
@@ -137,10 +140,11 @@ export default function PyTestRunner() {
               <div style={{ display: "flex", alignItems: "center" }}>
                 {/* ซ้าย: รูปภาพ */}
                 <img
-                  src={testertoolicon}
+                  src={"/testertoolicon.png"}
                   style={{ width: 150, height: 150, objectFit: "contain" }}
                   alt="icon"
                 />
+                
 
                 {/* ขวา: ตัวหนังสือ */}
                 <div>
@@ -244,6 +248,7 @@ export default function PyTestRunner() {
                 >
                   TEST CASE
                 </p>
+
                 <p
                   className="title"
                   style={{
@@ -316,7 +321,7 @@ export default function PyTestRunner() {
                 >
                   <button
                     onClick={() => runTestsMutation.mutate()}
-                    disabled={isRunningTets}
+                    disabled={runTestsMutation.isPending}
                     style={{
                       fontSize: 18,
                       fontWeight: 800,
@@ -338,7 +343,7 @@ export default function PyTestRunner() {
 
                   <button
                     onClick={reset}
-                    disabled={isRunningTets}
+                    disabled={isRunningSuccess}
                     style={{
                       backgroundColor: "#8c8d8dff",
                       color: "white",
@@ -406,11 +411,10 @@ export default function PyTestRunner() {
           <div>
             <RunUnitTestsResultSection
               results={results}
-              isRunningTets={isRunningTets}
+              isRunningSuccess={isRunningSuccess}
             />
           </div>
         </div>
-
       </div>
     </div>
   );
