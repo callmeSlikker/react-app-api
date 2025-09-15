@@ -71,11 +71,6 @@ export default function Sale56_Input() {
         },
         detail: {
           amountValue,
-          mid,
-          tid_bbl,
-          tid_unionpay,
-          D2: card.D2,
-          D4: card.D4,
         },
       },
     };

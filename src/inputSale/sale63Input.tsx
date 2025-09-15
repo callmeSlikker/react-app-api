@@ -58,10 +58,6 @@ export default function Sale63_Input() {
         },
         detail: {
           amountValue,
-          mid,
-          tid_wallet,
-          D2: Wallet.D2,
-          D4: Wallet.D4,
         },
       },
     };

@@ -58,10 +58,6 @@ export default function Sale57_Input() {
         },
         detail: {
           amountValue,
-          mid,
-          tid_rabbit,
-          D2: Rabbit.D2,
-          D4: Rabbit.D4,
         },
       },
     };

@@ -9,7 +9,7 @@ export function ConnectDeviceToCloudSection() {
   );
   const [code, setCode] = useState("00000");
   const [eid, setEid] = useState(9000041);
-  const [appId, setAppID] = useState(9000041);
+  const [appId, setAppID] = useState(600041);
   const [connectSuccess, setConnectSuccess] = useState(false);
   const [connectFailed, setConnectFailed] = useState(false);
 

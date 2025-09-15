@@ -65,14 +65,14 @@ export default function HistoriesPage() {
   };
 
   const downloadHistoriesCSV = () => {
-    if (!histories || histories.length === 0) {
-      alert("No histories to export");
+    if (!filteredHistories || filteredHistories.length === 0) {
+      alert("No histories to export for selected date range");
       return;
     }
 
     let csvContent = `Date,Function,Request,Code,Response Body,Success,Error\n`;
 
-    histories.forEach((entry) => {
+    filteredHistories.forEach((entry) => {
       const date = entry.date;
       const func = entry.function || "";
       const request = JSON.stringify(entry.request).replace(/"/g, '""');
@@ -327,8 +327,8 @@ export default function HistoriesPage() {
                   typeof entry.response.code === "number"
                     ? entry.response.code
                     : typeof entry.response.code === "string"
-                    ? parseInt(entry.response.code, 10)
-                    : NaN;
+                      ? parseInt(entry.response.code, 10)
+                      : NaN;
                 const isSuccess =
                   !isNaN(codeNumber) && codeNumber >= 200 && codeNumber < 300;
 

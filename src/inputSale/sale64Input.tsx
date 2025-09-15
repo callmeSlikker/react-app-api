@@ -71,11 +71,6 @@ export default function Sale64_Input() {
         },
         detail: {
           amountValue,
-          mid,
-          tid_qrc,
-          tid_promptpay,
-          D2: qrcredit.D2,
-          D4: qrcredit.D4,
         },
       },
     };

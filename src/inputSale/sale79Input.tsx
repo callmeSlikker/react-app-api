@@ -58,10 +58,6 @@ export default function Sale79_Input() {
         },
         detail: {
           amountValue,
-          mid,
-          tid_linepay,
-          D2: Linepay.D2,
-          D4: Linepay.D4,
         },
       },
     };
