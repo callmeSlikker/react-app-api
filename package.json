@@ -66,18 +66,27 @@
   },
   "build": {
     "appId": "com.yourdomain.myapp",
-    "productName": "React Window Application",
+    "productName": "Test LinkPOS API",
     "directories": {
       "buildResources": "build"
     },
+
     "files": [
       "build/**/*",
       "public/electron.js",
       "node_modules/**/*",
       "package.json"
     ],
+    
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "icon": "build/icon.icns"
+    },
+    "linux": {
+      "icon": "build/icon.png"
     }
   }
 }

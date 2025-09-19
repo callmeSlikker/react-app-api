@@ -32,7 +32,7 @@ export function RunUnitTestsResultSection({
     <>
       {(!isRunningSuccess || !results.length) ? (
         <img
-          src={"/waiting_transaction.jpg"}
+          src={process.env.PUBLIC_URL + "/waiting_transaction.jpg"}
           style={{ width: "85%", height: "auto", objectFit: "contain" }}
           alt="LoadTransaction"
         />

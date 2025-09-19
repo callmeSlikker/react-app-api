@@ -140,9 +140,9 @@ export default function PyTestRunner() {
               <div style={{ display: "flex", alignItems: "center" }}>
                 {/* ซ้าย: รูปภาพ */}
                 <img
-                  src={"/testertoolicon.png"}
-                  style={{ width: 150, height: 150, objectFit: "contain" }}
+                  src={process.env.PUBLIC_URL + "/testertoolicon.png"}
                   alt="icon"
+                  style={{ width: 100, height: 100 }}
                 />
                 
 

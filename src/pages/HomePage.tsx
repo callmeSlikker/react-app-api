@@ -165,7 +165,7 @@ export default function HomePage() {
         </div>
 
         <img
-          src="/wave_backgroundImage.jpg"
+          src={process.env.PUBLIC_URL + "/wave_backgroundImage.jpg"}
           alt="background"
           style={{
             width: "100%",

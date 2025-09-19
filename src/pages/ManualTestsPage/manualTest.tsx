@@ -89,9 +89,9 @@ export default function ManualTest() {
                         {/* ไอคอน + สถานะ */}
                         <div style={{ display: "flex", alignItems: "left" }}>
                             <img
-                                src={"/testertoolicon.png"}
-                                style={{ width: 150, height: 150, objectFit: "contain" }}
+                                src={process.env.PUBLIC_URL + "/testertoolicon.png"}
                                 alt="icon"
+                                style={{ width: 100, height: 100 }}
                             />
                             <div>
                                 <ul
