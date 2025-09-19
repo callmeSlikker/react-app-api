@@ -8,7 +8,7 @@ export function ConnectDeviceToCloudSection() {
     (state) => state.setCloudConnected
   );
   const [code, setCode] = useState("00000");
-  const [eid, setEid] = useState(9000041);
+  const [eid, setEid] = useState<string>("9000041");
   const [appId, setAppID] = useState(600041);
   const [connectSuccess, setConnectSuccess] = useState(false);
   const [connectFailed, setConnectFailed] = useState(false);
@@ -17,7 +17,7 @@ export function ConnectDeviceToCloudSection() {
     try {
       const res = await axios.post(
         "http://localhost:9092/connectDeviceByCloud",
-        { code, eid }
+        { code, eid, appId }
       );
       const data = res.data;
 
@@ -103,9 +103,9 @@ export function ConnectDeviceToCloudSection() {
             eid
           </label>
           <input
-            type="number"
+            type="text"
             value={eid}
-            onChange={(e) => setEid(Number(e.target.value))}
+            onChange={(e) => setEid(e.target.value)}
             style={{
               width: "250px",
               marginTop: 4,
@@ -152,8 +152,8 @@ export function ConnectDeviceToCloudSection() {
             background: connectSuccess
               ? "#16a34a" // เขียวสำเร็จ
               : connectFailed
-              ? "#dc2626" // แดงล้มเหลว
-              : "#d3d7d8ff", // สีเริ่มต้น
+                ? "#dc2626" // แดงล้มเหลว
+                : "#d3d7d8ff", // สีเริ่มต้น
             color: connectSuccess || connectFailed ? "white" : "black",
             border: "none",
             borderRadius: 4,
@@ -167,8 +167,8 @@ export function ConnectDeviceToCloudSection() {
           {connectSuccess
             ? "Connected"
             : connectFailed
-            ? "Connect Failed"
-            : "Connect to Device"}
+              ? "Connect Failed"
+              : "Connect to Device"}
         </button>
       </div>
     </div>
