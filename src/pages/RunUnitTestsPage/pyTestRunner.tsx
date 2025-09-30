@@ -36,6 +36,9 @@ export default function PyTestRunner() {
     mutationFn: async () => {
       const allResults: UnitTestResult[][] = [];
 
+      // ฟังก์ชันสำหรับ delay
+      const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
       for (let loopIndex = 0; loopIndex < loopCount; loopIndex++) {
         const loopResults: UnitTestResult[] = [];
 
@@ -52,6 +55,11 @@ export default function PyTestRunner() {
         }
 
         allResults.push(loopResults);
+
+        // ✅ เพิ่ม delay หลังจากจบรอบหนึ่ง
+        if (loopIndex < loopCount - 1) {
+          await delay(5000); // 1000 ms = 1 วินาที
+        }
       }
 
       return allResults;
@@ -63,6 +71,7 @@ export default function PyTestRunner() {
       alert("Error running tests: " + error.message);
     },
   });
+
   const toggleFile = (fileNode: FileNodeFile) => {
     setSelectedFiles((prev) => {
       const exists = prev.find((f) => f.fileName === fileNode.name);
@@ -144,7 +153,7 @@ export default function PyTestRunner() {
                   alt="icon"
                   style={{ width: 100, height: 100 }}
                 />
-                
+
 
                 {/* ขวา: ตัวหนังสือ */}
                 <div>
@@ -343,7 +352,6 @@ export default function PyTestRunner() {
 
                   <button
                     onClick={reset}
-                    disabled={isRunningSuccess}
                     style={{
                       backgroundColor: "#8c8d8dff",
                       color: "white",
